@@ -1,0 +1,91 @@
+<UserControl x:Class="Clouva.Desktop.UI.Components.TitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clouva.Desktop.UI.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="27" d:DesignWidth="800">
+    <Grid>
+        <Border CornerRadius="13,13,0,0" Height="27" Background="#eee" VerticalAlignment="Top" MouseDown="TitleBar_MouseDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="40"
+                            Cursor="Arrow"
+                            BorderThickness="0"
+                            Click="Minimize_Click">
+
+                    <Image Source="pack://application:,,,/Public/ico/minus.png" 
+                            MaxWidth="15" 
+                            Margin="0,7,0,0" 
+                            Opacity="0.8"
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="Transparent">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#ccc"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Width="40"
+                        Cursor="Arrow"
+                        BorderThickness="0"
+                        Click="Maximize_Click">
+
+                    <Image Source="pack://application:,,,/Public/ico/squircle.png" 
+                            MaxWidth="13" 
+                            Opacity="0.8"
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="Transparent">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#ccc"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Width="40"
+                        Cursor="Arrow"
+                        BorderThickness="0"
+                        Click="Close_Click">
+
+                    <Image Source="pack://application:,,,/Public/ico/x.png" 
+                            MaxWidth="15" 
+                            Opacity="0.8"
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="Transparent"
+                                    CornerRadius="0,13,0,0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="Red"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,160 @@
+<Window x:Class="Clouva.Desktop.AuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clouva.Desktop"
+        xmlns:components="clr-namespace:Clouva.Desktop.UI.Components"
+        mc:Ignorable="d"
+        Title="Auth client"
+        Height="650" Width="800" MinHeight="500" MinWidth="700"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <Style x:Key="AuthActionButton" TargetType="Button">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="MinWidth" Value="300"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AuthSignUpButton" TargetType="Button" BasedOn="{StaticResource AuthActionButton}">
+            <Setter Property="Background" Value="#7294B4"/>
+            <Setter Property="Foreground" Value="#1E1E1E"/>
+        </Style>
+
+        <Style x:Key="AuthLogInButton" TargetType="Button" BasedOn="{StaticResource AuthActionButton}">
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="#F0F0F0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="White" CornerRadius="15" BorderBrush="#eee" BorderThickness="1">
+        <Grid>
+            <components:TitleBar />
+
+            <Grid Margin="20,27,20,0">
+                <!-- AUTH CONTENT -->
+                <Grid x:Name="AuthContentGrid" Visibility="Visible">
+                    <Border Padding="20">
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+
+                            <TextBlock Text="Welcome to Clouva.ai"
+                                       FontWeight="SemiBold"
+                                       Foreground="Black"
+                                       FontSize="35"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Speak, don't type"
+                                       FontWeight="Normal"
+                                       Foreground="Gray"
+                                       FontSize="18"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,28"/>
+
+                            <Button x:Name="SignUpButton"
+                                    Style="{StaticResource AuthSignUpButton}"
+                                    Content="Sign Up"
+                                    Click="SignUpButton_Click"/>
+
+                            <Button x:Name="LogInButton"
+                                    Style="{StaticResource AuthLogInButton}"
+                                    Content="Log In"
+                                    Click="LogInButton_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- LOADING CONTENT -->
+                <Grid x:Name="LoadingGrid" Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Width="420">
+
+                        <TextBlock Text="Opening your browser..."
+                                   FontSize="25"
+                                   FontWeight="SemiBold"
+                                   TextAlignment="Center"
+                                   Margin="0,0,0,40"/>
+
+                        <!-- <ProgressBar IsIndeterminate="True" Height="6"/> -->
+
+                        <Grid Width="32" Height="32">
+                            <Path Stroke="Black"
+                                  StrokeThickness="2"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round">
+
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="16,2">
+                                            <ArcSegment Point="16,30"
+                                                        Size="14,14"
+                                                        SweepDirection="Clockwise"
+                                                        IsLargeArc="True"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+
+                                <Path.RenderTransform>
+                                    <RotateTransform x:Name="SpinTransform"
+                                                     CenterX="16"
+                                                     CenterY="16"/>
+                                </Path.RenderTransform>
+
+                                <Path.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetName="SpinTransform"
+                                                                 Storyboard.TargetProperty="Angle"
+                                                                 From="0" To="360"
+                                                                 Duration="0:0:0.7"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Path.Triggers>
+                            </Path>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+    ollama_qwen:
+        image: ollama/ollama
+        container_name: ollama_qwen
+        ports:
+            - '11434:11434'
+        environment:
+            - OLLAMA_NUM_PARALLEL=4
+            - OLLAMA_MAX_LOADED_MODELS=2
+            - OLLAMA_KEEP_ALIVE=20m
+        volumes:
+            - ollama_qwen_data:/root/.ollama
+        restart: unless-stopped
+    ollama_phi:
+        image: ollama/ollama
+        container_name: ollama_phi
+        ports:
+            - '11435:11434'
+        environment:
+            - OLLAMA_NUM_PARALLEL=6
+            - OLLAMA_MAX_LOADED_MODELS=1
+            - OLLAMA_KEEP_ALIVE=30m
+        volumes:
+            - ollama_phi_data:/root/.ollama
+        restart: unless-stopped
+    db:
+        image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: clouvaai
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U postgres']
+            interval: 5s
+            retries: 5
+    redis:
+        image: redis:8
+        command: redis-server --requirepass redispass
+        ports:
+            - '6379:6379'
+        healthcheck:
+            test: ['CMD', 'redis-cli', 'ping']
+            interval: 5s
+            retries: 5
+
+    http_server:
+        restart: always
+        build:
+            context: Clouva.Server
+            dockerfile: Dockerfile
+        env_file: './Clouva.Server/.env.docker'
+        volumes:
+            - ./Clouva.Server:/app
+        command: air
+        ports:
+            - '8080:8080'
+        depends_on:
+            - ollama_qwen
+            - ollama_phi
+            - db
+            - redis
+
+volumes:
+    ollama_qwen_data:
+    ollama_phi_data:

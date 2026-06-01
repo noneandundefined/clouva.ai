@@ -1,0 +1,30 @@
+.check-custom[type='checkbox']
+	position: relative
+	width: 35px
+	height: 20px
+	-webkit-appearance: none
+	background: #e9e9e9
+	outline: none
+	border-radius: 20px
+	transition: 0.2s
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1)
+	cursor: pointer
+
+	&:checked
+		background: #03a9f4
+
+	&:before
+		content: ''
+		position: absolute
+		width: 18px
+		height: 19px
+		border-radius: 50%
+		top: 0
+		left: 0
+		background: #fff
+		transform: scale(1.1)
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.17)
+		transition: 0.3s
+
+	&:checked:before
+		left: 15px
