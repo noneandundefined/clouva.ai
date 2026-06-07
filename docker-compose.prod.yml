@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
     ollama_qwen:
         image: ollama/ollama
