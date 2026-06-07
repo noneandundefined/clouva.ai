@@ -15,8 +15,8 @@ func (s *httpServer) cors(handler http.Handler) http.Handler {
 		origins = []string{"http://localhost:5173"}
 	} else {
 		origins = []string{
-			"https://clouva.ai",
-			"http://clouva.ai",
+			"https://clouva.ru",
+			"http://clouva.ru",
 			"https://challenges.cloudflare.com",
 		}
 	}

@@ -23,8 +23,10 @@ jobs:
 
             - name: Build binary
               run: |
+                  cd Clouva.Server
+
                   mkdir -p bin
-                  make build
+                  make build-linux
 
     deploy_prod:
         name: Deploy production
