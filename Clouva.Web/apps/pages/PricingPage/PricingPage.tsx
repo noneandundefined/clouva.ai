@@ -22,7 +22,7 @@ const PricingPage = () => {
 		}
 
 		toast.success(t('message.payment-success'));
-        
+
 		queryClient.invalidateQueries({ queryKey: ['respUserLoginState'] });
 		queryClient.invalidateQueries({ queryKey: ['respPaymentBilling'] });
 		queryClient.invalidateQueries({ queryKey: ['respPaymentHistory'] });
