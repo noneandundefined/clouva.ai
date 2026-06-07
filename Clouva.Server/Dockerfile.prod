@@ -1,4 +1,4 @@
-FROM golang:1.26-bookworm AS builder
+FROM golang:1.26-bookworm
 
 WORKDIR /app
 
@@ -8,12 +8,6 @@ RUN go mod download
 COPY . .
 
 RUN CGO_ENABLED=0 go build -o clouva.ai-linux ./cmd/server
-
-FROM debian:bookworm-slim
-
-WORKDIR /app
-
-COPY --from=builder /app/clouva.ai-linux .
 
 EXPOSE 8080
 
