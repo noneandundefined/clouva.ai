@@ -1,0 +1,5 @@
+#!/bin/bash
+
+docker exec -it clouvaai-http_server-1 sh
+
+make migrate-up
