@@ -24,7 +24,7 @@ services:
             - ollama_phi_data:/root/.ollama
         restart: unless-stopped
     db:
-        image: postgres
+        image: postgres:16
         restart: always
         ports:
             - '5432:5432'
@@ -32,8 +32,6 @@ services:
             - ./Clouva.Server/.env.production
         volumes:
             - postgres_data:/var/lib/postgresql/data
-        networks:
-            - internal
         healthcheck:
             test: ['CMD-SHELL', 'pg_isready -U postgres']
             interval: 5s
@@ -59,17 +57,11 @@ services:
         env_file: './Clouva.Server/.env.production'
         ports:
             - '8080:8080'
-        networks:
-            - internal
         depends_on:
             - ollama_qwen
             - ollama_phi
             - db
             - redis
-
-networks:
-    internal:
-        driver: bridge
 
 volumes:
     postgres_data:
