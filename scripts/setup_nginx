@@ -39,6 +39,11 @@ if [ -d "$NGINX_HTML_DIR" ] && [ "$(ls -A $NGINX_HTML_DIR 2>/dev/null)" ]; then
 fi
 
 echo -e "${BLUE}Настройка nginx | Копирование файлов '$DIST_DIR/*' в '$NGINX_HTML_DIR'${NC}"
+if [ ! -d "$NGINX_HTML_DIR" ]; then
+    echo -e "Директория $NGINX_HTML_DIR не существует. Создаём..."
+    sudo mkdir -p "$NGINX_HTML_DIR" || { echo >&2 "Ошибка: Не удалось создать директорию $NGINX_HTML_DIR."; exit 1; }
+fi
+
 sudo rm -rf $NGINX_HTML_DIR/*
 sudo cp -r $DIST_DIR/* $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов."; exit 1; }
 sudo cp -r ./robots.txt ./sitemap.xml $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов."; exit 1; }
