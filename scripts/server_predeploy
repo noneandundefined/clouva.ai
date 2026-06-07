@@ -14,4 +14,4 @@ echo "Upping docker clouva.ai.server container..."
 docker compose -f docker-compose.prod.yml up -d
 
 echo "Docker done."
-docker compose ps
+docker compose -f docker-compose.prod.yml ps
