@@ -1,3 +1,6 @@
+include ./.env.production
+export
+
 SHELL := bash
 
 COMMIT      ?= $(shell git rev-parse --short HEAD)
