@@ -64,7 +64,7 @@ services:
         restart: always
         build:
             context: Clouva.Server
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         env_file: './Clouva.Server/.env'
         volumes:
             - ./Clouva.Server:/app
