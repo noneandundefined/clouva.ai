@@ -79,7 +79,7 @@ const config: CustomRouteConfig[] = [
 	/** SUBs */
 	{
 		path: ROUTES.CLOUVA_PRICING,
-		loginRequired: true,
+		loginRequired: false,
 		redirectIfLogged: false,
 		title: 'meta.Pricing.title',
 		component: Pricing,
