@@ -2,6 +2,8 @@ services:
     ollama_qwen:
         image: ollama/ollama
         container_name: ollama_qwen
+        networks:
+            - internal
         ports:
             - '11434:11434'
         environment:
@@ -14,6 +16,8 @@ services:
     ollama_phi:
         image: ollama/ollama
         container_name: ollama_phi
+        networks:
+            - internal
         ports:
             - '11435:11434'
         environment:
@@ -25,6 +29,8 @@ services:
         restart: unless-stopped
     db:
         image: postgres:16
+        networks:
+            - internal
         restart: always
         env_file:
             - ./Clouva.Server/.env.production
@@ -36,16 +42,16 @@ services:
             retries: 5
     redis:
         image: redis:8
+        networks:
+            - internal
         restart: unless-stopped
-        command: redis-server --requirepass ${REDIS_PASSWORD}
+        command: redis-server --requirepass redis-clouvavp5-passw0rd
         volumes:
             - redis_data:/data
-        healthcheck:
-            test: ['CMD', 'redis-cli', 'ping']
-            interval: 5s
-            retries: 5
 
     http_server:
+        networks:
+            - internal
         restart: unless-stopped
         build:
             context: Clouva.Server
@@ -64,3 +70,7 @@ volumes:
     redis_data:
     ollama_qwen_data:
     ollama_phi_data:
+
+networks:
+    internal:
+        driver: bridge
