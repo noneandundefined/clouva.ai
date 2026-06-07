@@ -48,7 +48,7 @@ jobs:
                       cd /root/clouva.ai
 
                       git fetch origin
-                      git reset --hard origin/preprod
+                      git reset --hard origin/main
 
                       cd /root/clouva.ai/scripts
 
