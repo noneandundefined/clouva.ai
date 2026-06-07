@@ -1,6 +1,3 @@
-include Clouva.Server/.env.production
-export
-
 SHELL := bash
 
 COMMIT      ?= $(shell git rev-parse --short HEAD)
@@ -12,7 +9,7 @@ CMD_DIR     := ./cmd/server
 BIN_DIR     := ./bin
 CGO_ENABLED ?= 0
 
-DB_URL ?= $(DB_URL)
+DB_URL ?= postgres://4ser-clouva-ai:pa55w0rd-clouva-a1@db:5432/clouvaai?sslmode=disable
 MIGRATIONS_DIR ?= cmd/migrate/migrations
 GOOSE ?= goose
 
