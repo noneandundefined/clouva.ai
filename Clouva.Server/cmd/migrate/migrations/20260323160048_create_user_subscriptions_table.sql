@@ -9,7 +9,13 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
     plan_name TEXT NOT NULL DEFAULT 'Free',
     valid_from TIMESTAMPTZ NOT NULL DEFAULT (timezone('UTC', now())), -- начало действия подписки
     valid_to TIMESTAMPTZ,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    auto_renew_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    yookassa_payment_method_id VARCHAR(255),
+    payment_method_type VARCHAR(100),
+    payment_method_title TEXT,
+    payment_method_saved_at TIMESTAMPTZ
 );
 
 -- +Triggers
