@@ -1,4 +1,4 @@
-include ./.env.production
+include Clouva.Server/.env.production
 export
 
 SHELL := bash
