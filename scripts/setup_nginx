@@ -9,7 +9,7 @@ NC='\033[0m'
 HOME="$(git rev-parse --show-toplevel)"
 
 FILE_CONFIG="Clouva.Web/apps/.config/config.client.ts"
-NGINX_HTML_DIR='/usr/share/nginx/html/clouva.com'
+NGINX_HTML_DIR='/usr/share/nginx/html/clouva.ru'
 DIST_DIR='dist'
 
 echo -e "${BLUE}Проверка наличия необходимых программ...${NC}"
@@ -39,14 +39,10 @@ if [ -d "$NGINX_HTML_DIR" ] && [ "$(ls -A $NGINX_HTML_DIR 2>/dev/null)" ]; then
 fi
 
 echo -e "${BLUE}Настройка nginx | Копирование файлов '$DIST_DIR/*' в '$NGINX_HTML_DIR'${NC}"
-if [ ! -d "$NGINX_HTML_DIR" ]; then
-    echo -e "Директория $NGINX_HTML_DIR не существует. Создаём..."
-    sudo mkdir -p "$NGINX_HTML_DIR" || { echo >&2 "Ошибка: Не удалось создать директорию $NGINX_HTML_DIR."; exit 1; }
-fi
-
+sudo mkdir -p "$NGINX_HTML_DIR"
 sudo rm -rf $NGINX_HTML_DIR/*
-sudo cp -r $DIST_DIR/* $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов."; exit 1; }
-sudo cp -r ./robots.txt ./sitemap.xml $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов."; exit 1; }
+sudo cp -r $DIST_DIR/* $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов dist."; exit 1; }
+sudo cp -r ./robots.txt ./sitemap.xml $NGINX_HTML_DIR || { echo >&2 "Ошибка копирования файлов robots...."; exit 1; }
 
 echo -e "${BLUE}Перезагрузка Nginx${NC}"
 sudo systemctl restart nginx || { echo >&2 "Ошибка перезагрузки Nginx."; exit 1; }
