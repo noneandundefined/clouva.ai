@@ -65,7 +65,7 @@ services:
         build:
             context: Clouva.Server
             dockerfile: Dockerfile
-        env_file: './Clouva.Server/.env.docker'
+        env_file: './Clouva.Server/.env'
         volumes:
             - ./Clouva.Server:/app
         command: air

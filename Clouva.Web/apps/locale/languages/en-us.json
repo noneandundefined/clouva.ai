@@ -199,6 +199,8 @@
 		"authorize-device-logged-as": "You're currently logged in as:",
 		"authorize-device-hint": "Please only log in if you just came from the Clouva.ai app.",
 		"authorize-device-cancel": "Cancel",
-		"authorize-device-confirm": "Yes, Log in"
+		"authorize-device-confirm": "Yes, Log in",
+		"ack-ai-one-model": "There may currently be increased load on the AI services. Request processing and response generation times may be longer than usual.",
+		"ack-ai-zero-model": "The AI service is temporarily unavailable due to maintenance. Please try again later."
 	}
 }

@@ -15,44 +15,57 @@ import { ToastContainer } from 'react-toastify';
 
 import '@/utils/i18n';
 import Fallback from './components/Fallback';
+import { basicMetaAckAiModels } from './rest/meta';
 import ErrorFallback from './components/ErrorFallback';
 import { ModalProvider } from './context/useModalContext';
+import { AckAiModelsContext } from './context/useAckAiModels';
+import { useHandleServer } from './hooks/Server/useHandleServer';
 
 const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			staleTime: 1000 * 30,
-			refetchOnWindowFocus: false,
-			refetchOnReconnect: true,
-			refetchOnMount: true,
-		},
-	},
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 30,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true,
+            refetchOnMount: true,
+        },
+    },
 });
 
 const App = () => {
-	return (
-		<ErrorBoundary fallback={<ErrorFallback />}>
-			<Suspense fallback={<Fallback />}>
-				<Router />
-			</Suspense>
-		</ErrorBoundary>
-	);
+    return (
+        <ErrorBoundary fallback={<ErrorFallback />}>
+            <Suspense fallback={<Fallback />}>
+                <Router />
+            </Suspense>
+        </ErrorBoundary>
+    );
 };
 
+const Root = () => {
+    const { data } = useHandleServer(['respMetaAckAiModels'], basicMetaAckAiModels, { refetchInterval: 30000 });
+
+    return (
+        <AckAiModelsContext.Provider value={data?.status ?? 2}>
+            <ToastContainer position="top-center" autoClose={2500} hideProgressBar={false} newestOnTop={false} closeOnClick={true} closeButton={true} theme="light" limit={3} />
+            <App />
+        </AckAiModelsContext.Provider>
+    )
+}
+
 createRoot(document.getElementById('root')!).render(
-	<BrowserRouter>
-		<HelmetProvider>
-			<QueryClientProvider client={queryClient}>
-				<ModalProvider>
-					<ToastContainer position="top-center" autoClose={2500} hideProgressBar={false} newestOnTop={false} closeOnClick={true} closeButton={true} theme="light" limit={3} />
-					<App />
+    <BrowserRouter>
+        <HelmetProvider>
+            <QueryClientProvider client={queryClient}>
+                <ModalProvider>
+                    <Root />
 
-					{/* AuthModal */}
-					<GlobalAuthModal />
+                    {/* AuthModal */}
+                    <GlobalAuthModal />
 
-					<ReactQueryDevtools initialIsOpen={true} />
-				</ModalProvider>
-			</QueryClientProvider>
-		</HelmetProvider>
-	</BrowserRouter>
+                    <ReactQueryDevtools initialIsOpen={true} />
+                </ModalProvider>
+            </QueryClientProvider>
+        </HelmetProvider>
+    </BrowserRouter>
 );

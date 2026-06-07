@@ -26,9 +26,7 @@ type httpServer struct {
 
 func main() {
 	/* .env - .env.production */
-	if err := godotenv.Load(); err != nil {
-		panic(err)
-	}
+	_ = godotenv.Load()
 
 	/* Inital logger */
 	logger.InitLogger()

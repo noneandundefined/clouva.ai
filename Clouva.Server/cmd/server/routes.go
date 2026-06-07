@@ -5,6 +5,7 @@ import (
 
 	"clouva.ai.server/handler/v1/auth_handler_v1"
 	"clouva.ai.server/handler/v1/device_handler_v1"
+	"clouva.ai.server/handler/v1/meta_handler_v1"
 	"clouva.ai.server/handler/v1/payment_handler_v1"
 	"clouva.ai.server/handler/v1/sub_handler_v1"
 	"clouva.ai.server/handler/v1/text_handler_v1"
@@ -54,6 +55,8 @@ func (s *httpServer) routes() http.Handler {
 	sub_handler_v1.NewHandler(baseHandler).RegisterRoutes(subrouter)
 	/* Payment rotues */
 	payment_handler_v1.NewHandler(baseHandler).RegisterRoutes(subrouter)
+	/* Meta rotues */
+	meta_handler_v1.NewHandler(baseHandler).RegisterRoutes(subrouter)
 
 	/* Doc routes */
 	s.docs(subrouter)

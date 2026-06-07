@@ -1,9 +1,9 @@
 import axiosClient from './axios';
 import { toast } from 'react-toastify';
+import { ROUTES } from '@/constants/constants';
 import { CACHEKEYs } from '@/constants/CacheKeys.constants';
 import type { AuthSigninRequest } from '@/interface/auth/authSigninRequest.interface';
 import type { AuthSignupRequest } from '@/interface/auth/authSignupRequest.interface';
-import { ROUTES } from '@/constants/constants';
 
 const apiPath = '/auth';
 

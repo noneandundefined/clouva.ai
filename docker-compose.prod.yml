@@ -27,33 +27,34 @@ services:
         restart: unless-stopped
     db:
         image: postgres
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: clouvaai
+        restart: unless-stopped
+        env_file:
+            - ./.env.production
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
         healthcheck:
             test: ['CMD-SHELL', 'pg_isready -U postgres']
             interval: 5s
             retries: 5
     redis:
         image: redis:8
+        restart: unless-stopped
         command: redis-server --requirepass redispass
         ports:
             - '6379:6379'
+        volumes:
+            - redis_data:/data
         healthcheck:
             test: ['CMD', 'redis-cli', 'ping']
             interval: 5s
             retries: 5
 
     http_server:
-        restart: always
+        restart: unless-stopped
         build:
             context: Clouva.Server
             dockerfile: Dockerfile
-        env_file: './Clouva.Server/.env.docker'
-        volumes:
-            - ./Clouva.Server:/app
-        command: air
+        env_file: './Clouva.Server/.env.production'
         ports:
             - '8080:8080'
         depends_on:
@@ -63,5 +64,7 @@ services:
             - redis
 
 volumes:
+    postgres_data:
+    redis_data:
     ollama_qwen_data:
     ollama_phi_data:

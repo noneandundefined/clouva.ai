@@ -3,8 +3,8 @@ export const config = {
 	links: {
 		URL_BACKEND_DEV: 'http://localhost:8080/api/v1',
 		URL_FRONTEND_DEV: 'http://localhost:5173',
-		URL_BACKEND_PROD: 'https://clouva.ai/api/v1',
-		URL_FRONTEND_PROD: 'https://clouva.ai',
+		URL_BACKEND_PROD: 'https://clouva.com/api/v1',
+		URL_FRONTEND_PROD: 'https://clouva.com',
 	},
 	type: {
 		release: 'dev', // prod
