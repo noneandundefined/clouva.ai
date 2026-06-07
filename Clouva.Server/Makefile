@@ -9,7 +9,7 @@ CMD_DIR     := ./cmd/server
 BIN_DIR     := ./bin
 CGO_ENABLED ?= 0
 
-DB_URL ?= postgres://postgres:password@localhost:5432/clouvaai?sslmode=disable
+DB_URL ?= $(DB_URL)
 MIGRATIONS_DIR ?= cmd/migrate/migrations
 GOOSE ?= goose
 
