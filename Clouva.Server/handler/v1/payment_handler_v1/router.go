@@ -12,9 +12,7 @@ import (
 /* RegisterRoutes: авторизация всех путей */
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.Handle("/payments/webhook", middleware.PowDDos()(
-		httpx.ErrorHandler(h.PostWebhookHandler_V1),
-	)).Methods(http.MethodPost)
+	router.Handle("/payments/webhook", httpx.ErrorHandler(h.PostWebhookHandler_V1)).Methods(http.MethodPost)
 
 	paymentRouter := router.PathPrefix("/payments").Subrouter()
 	paymentRouter.Use(middleware.IsAuthenticatedMiddleware(h.BaseHandler))
