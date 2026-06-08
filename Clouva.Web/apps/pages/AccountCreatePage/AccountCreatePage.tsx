@@ -28,8 +28,8 @@ const AccountCreatePage = () => {
 	} = useForm<AuthSignupRequest>({
 		mode: 'onChange',
 		defaultValues: {
-			first_name: '',
-			last_name: '',
+			first_name: null,
+			last_name: null,
 			email: '',
 			password: '',
 		},
@@ -78,18 +78,14 @@ const AccountCreatePage = () => {
 						<GUInput
 							type="text"
 							placeholder={t('label.first-name')}
-							{...register('first_name', {
-								required: t('message.validation-required-field'),
-							})}
+							{...register('first_name')}
 							error={errors.first_name?.message}
 						/>
 
 						<GUInput
 							type="text"
 							placeholder={t('label.last-name')}
-							{...register('last_name', {
-								required: t('message.validation-required-field'),
-							})}
+							{...register('last_name')}
 							error={errors.last_name?.message}
 						/>
 					</div>

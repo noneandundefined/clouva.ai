@@ -74,6 +74,9 @@ func main() {
 	server.cron = cron.New()
 	server.cron.Start()
 
+	/* cron */
+	server.startPaymentClearPending()
+
 	/* Started HTTPx server */
 	if err := server.httpStart(); err != nil {
 		logger.Error("Failed start TCP server: %s", err.Error())

@@ -54,7 +54,8 @@
 	"error.email-send-failed": "Не удалось отправить электронное письмо",
 	"error.db-operation-failed": "Не удалось выполнить операцию с базой данных",
 	"success-password-reset": "Пароль успешно изменён!",
-	"error.invalid-characters-username": "Недопустимые символы в имени пользователя",
+	"error.invalid-characters-firstname": "Недопустимые символы в имени пользователя",
+	"error.invalid-characters-lastname": "Недопустимые символы в фамилии пользователя",
 	"error.simple-password": "Пароль слишком простой, введите новый",
 	"error.password-equals-email": "Пароль не может совпадать с адресом электронной почты",
 	"error.failed-to-save-data": "Не удалось сохранить данные, пожалуйста повторите попытку позже",
@@ -85,5 +86,7 @@
     "go-to-link-confirm-email-change": "Чтобы подтвердить смену почты, перейдите по ссылке",
     "email-change-link-sent": "Ссылка для подтверждения отправлена на новый адрес",
     "success.account-deleted": "Ваш аккаунт удалён",
-    "error.email-limit-24-hours": "Можно отправить не более 3 писем с подтверждением в сутки. Попробуйте позже."
+    "error.email-limit-24-hours": "Можно отправить не более 3 писем с подтверждением в сутки. Попробуйте позже.",
+    "error.at-least-one-name-required": "Необходимо указать имя или фамилию",
+    "error.too-many-active-payments": "Превышено количество активных платежей. Попробуйте позже"
 }

@@ -1,6 +1,6 @@
 import axiosClient from './axios';
-import { toast } from 'react-toastify';
 import { ROUTES } from '@/constants/constants';
+import { notify } from '@/components/Notification/notify';
 import { CACHEKEYs } from '@/constants/CacheKeys.constants';
 import type { AuthSigninRequest } from '@/interface/auth/authSigninRequest.interface';
 import type { AuthSignupRequest } from '@/interface/auth/authSignupRequest.interface';
@@ -72,7 +72,7 @@ export const basicAuthConfirmEmail = async (exp: any, sig: any, uuid: any): Prom
  */
 export const basicAuthSignOut = async (): Promise<void> => {
 	const response = await axiosClient.post(`${apiPath}/signout`);
-	toast.success(response.data.message);
+	notify.success(response.data.message);
 
 	window.location.replace(ROUTES.CLOUVA);
 };

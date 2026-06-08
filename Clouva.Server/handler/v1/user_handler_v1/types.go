@@ -13,8 +13,8 @@ type UserSessionDisconnectPayload struct {
 }
 
 type UserProfileUpdatePayload struct {
-	FirstName string `json:"first_name" validate:"required,min=3,max=45"`
-	LastName  string `json:"last_name" validate:"required,min=3,max=45"`
+	FirstName *string `json:"first_name" validate:"omitempty,min=3,max=45"`
+	LastName  *string `json:"last_name" validate:"omitempty,min=3,max=45"`
 }
 
 type UserEmailChangePayload struct {

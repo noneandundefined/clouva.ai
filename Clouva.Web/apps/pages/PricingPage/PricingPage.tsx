@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { basicSubsGet } from '@/rest/subAPI';
 import Close from '@/components/@icons/close';
 import { ROUTES } from '@/constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
+import { notify } from '@/components/Notification/notify';
 import { useHandleServer } from '@/hooks/Server/useHandleServer';
 import PricingCard from '@/components/common/Pricing/PricingCard';
 
 const PricingPage = () => {
 	const { t } = useTranslation();
-    const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { data: respSubsGet } = useHandleServer(['respSubsGet'], basicSubsGet);
@@ -21,7 +21,7 @@ const PricingPage = () => {
 			return;
 		}
 
-		toast.success(t('message.payment-success'));
+		notify.success(t('message.payment-success'));
 
 		queryClient.invalidateQueries({ queryKey: ['respUserLoginState'] });
 		queryClient.invalidateQueries({ queryKey: ['respPaymentBilling'] });

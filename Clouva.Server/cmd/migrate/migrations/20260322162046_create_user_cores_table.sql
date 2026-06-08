@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS user_cores (
     user_uuid VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     email_confirmed BOOLEAN DEFAULT FALSE,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL CHECK (char_length(password) > 5)
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    password VARCHAR(17) NOT NULL CHECK (char_length(password) > 5)
 );
 
 -- +Triggers

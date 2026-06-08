@@ -1,6 +1,6 @@
 export interface AuthSignupRequest {
-	first_name: string;
-	last_name: string;
+	first_name: string | null;
+	last_name: string | null;
 	email: string;
 	password: string;
 }

@@ -1,7 +1,7 @@
-import { basicTextRewrite } from '@/rest/textAPI';
 import i18next from 'i18next';
+import { basicTextRewrite } from '@/rest/textAPI';
+import { notify } from '@/components/Notification/notify';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 const getSpeechRecognitionCtor = () => window.SpeechRecognition ?? window.webkitSpeechRecognition;
 
@@ -102,7 +102,7 @@ export const useSpeechToText = (lang = 'ru-RU') => {
 					isRecordingRef.current = false;
 					setIsRecording(false);
 					recognitionRef.current = null;
-					toast.error(i18next.t('message.microphone-denied'));
+					notify.error(i18next.t('message.microphone-denied'));
 					return;
 				}
 
@@ -116,16 +116,16 @@ export const useSpeechToText = (lang = 'ru-RU') => {
 						isRecordingRef.current = false;
 						setIsRecording(false);
 						recognitionRef.current = null;
-						toast.error(i18next.t('message.speech-network-error'));
+						notify.error(i18next.t('message.speech-network-error'));
 					}
 
 					return;
 				}
 
 				if (event.error === 'network') {
-					toast.error(i18next.t('message.speech-network-error'));
+					notify.error(i18next.t('message.speech-network-error'));
 				} else {
-					toast.error(i18next.t('message.speech-error'));
+					notify.error(i18next.t('message.speech-error'));
 				}
 
 				clearRestartTimer();
@@ -141,12 +141,12 @@ export const useSpeechToText = (lang = 'ru-RU') => {
 		const SpeechRecognition = getSpeechRecognitionCtor();
 
 		if (!SpeechRecognition) {
-			toast.error(i18next.t('message.speech-not-supported'));
+			notify.error(i18next.t('message.speech-not-supported'));
 			return;
 		}
 
 		if (!window.isSecureContext) {
-			toast.error(i18next.t('message.speech-https-required'));
+			notify.error(i18next.t('message.speech-https-required'));
 			return;
 		}
 
@@ -170,7 +170,7 @@ export const useSpeechToText = (lang = 'ru-RU') => {
 			setIsRecording(true);
 		} catch {
 			recognitionRef.current = null;
-			toast.error(i18next.t('message.speech-start-failed'));
+			notify.error(i18next.t('message.speech-start-failed'));
 		}
 	};
 
@@ -189,7 +189,7 @@ export const useSpeechToText = (lang = 'ru-RU') => {
 		setText(finalText);
 
 		if (!finalText) {
-			toast.warn(i18next.t('message.speech-no-results'));
+			notify.error(i18next.t('message.speech-no-results'));
 			return;
 		}
 

@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ showLogin = true }) => {
                             setOpenMenu((prev) => !prev);
                         }}
                     >
-                        <p>{`${respUserLoginState.first_name} ${respUserLoginState.last_name}`}</p>
+                        <p>{`${respUserLoginState.first_name ?? ""} ${respUserLoginState.last_name ?? ""}`}</p>
                     </div>
 
                     {openMenu && respUserLoginState && <MenuHeader close={() => setOpenMenu(false)} user={respUserLoginState} />}
@@ -45,14 +45,13 @@ const Header: React.FC<HeaderProps> = ({ showLogin = true }) => {
             )}
 
             <div className="flex items-center gap-[1.5rem] lg:gap-[3rem] text-sm font-normal">
-                <a href={GITHUB_SOURCE_CODE} target="_blank" rel="noopener noreferrer" className="hidden sm:block text-[#777] hover:text-black cursor-pointer">{t('label.source-code')}</a>
+                <a href={GITHUB_SOURCE_CODE} target="_blank" rel="noopener noreferrer" className="hidden sm:block text-[#777] hover:text-black cursor-pointer">
+                    {t('label.source-code')}
+                </a>
                 <Link to={ROUTES.CLOUVA_PRICING} className="text-[#777] hover:text-black cursor-pointer">
                     {t('label.subscriptions')}
                 </Link>
-                <a
-                    href={`${GITHUB_SOURCE_CODE}/releases/latest/download/${GITHUB_NAME_APP}.exe`}
-                    className="hidden sm:block text-[#777] hover:text-black cursor-pointer"
-                >
+                <a href={`${GITHUB_SOURCE_CODE}/releases/latest/download/${GITHUB_NAME_APP}.exe`} className="hidden sm:block text-[#777] hover:text-black cursor-pointer">
                     {t('label.download-app')}
                 </a>
             </div>

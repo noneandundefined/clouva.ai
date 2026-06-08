@@ -9,8 +9,8 @@ type UserCore struct {
 	UserUUID       string    `json:"user_uuid" db:"user_uuid"`
 	Email          string    `json:"email" db:"email"`
 	EmailConfirmed bool      `json:"email_confirmed" db:"email_confirmed"`
-	FirstName      string    `json:"first_name" db:"first_name"`
-	LastName       string    `json:"last_name" db:"last_name"`
+	FirstName      *string   `json:"first_name" db:"first_name"`
+	LastName       *string   `json:"last_name" db:"last_name"`
 	Password       string    `json:"password" db:"password"`
 }
 
@@ -64,8 +64,8 @@ type UserLoginState struct {
 	CreatedAt      time.Time `json:"created_at" db:"created_at"`
 	Email          string    `json:"email" db:"email"`
 	EmailConfirmed bool      `json:"email_confirmed" db:"email_confirmed"`
-	FirstName      string    `json:"first_name" db:"first_name"`
-	LastName       string    `json:"last_name" db:"last_name"`
+	FirstName      *string   `json:"first_name" db:"first_name"`
+	LastName       *string   `json:"last_name" db:"last_name"`
 
 	/* User subscriptions */
 	PlanName    string     `json:"plan_name" db:"plan_name"`

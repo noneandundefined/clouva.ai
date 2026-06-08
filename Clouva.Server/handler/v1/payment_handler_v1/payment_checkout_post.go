@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"clouva.ai.server/infra/constants"
+	"clouva.ai.server/infra/logger"
 	"clouva.ai.server/infra/store/postgres/models"
 	"clouva.ai.server/middleware"
 	"clouva.ai.server/pkg/httpx"
@@ -39,6 +41,15 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 		}
 
 		return httperr.BadRequest(tr.TErr("error.fields-not-filled"))
+	}
+
+	count, err := h.Store.Payments.Get_PaymentActiveCount(ctx, authToken.User.UserUUID)
+	if err != nil {
+		return httperr.Db(ctx, err)
+	}
+
+	if count >= constants.MAX_PAYMENTS_COUNT {
+		return httperr.Conflict(tr.TErr("error.too-many-active-payments"))
 	}
 
 	planName := strings.TrimSpace(payload.PlanName)
@@ -84,6 +95,7 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 		SavePaymentMethod: true,
 	})
 	if err != nil {
+		logger.Error("PostCheckoutHandler_V1: %s", err.Error())
 		return httperr.InternalServerError(tr.TErr("error.payment-create-failed"))
 	}
 
@@ -103,6 +115,7 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 	}
 
 	if ykPayment.Confirmation.ConfirmationURL == "" {
+		logger.Error("PostCheckoutHandler_V1: ykPayment.Confirmation.ConfirmationURL is Empty")
 		return httperr.InternalServerError(tr.TErr("error.payment-create-failed"))
 	}
 

@@ -38,19 +38,32 @@ func (h *Handler) AuthSignupHandler_V1(w http.ResponseWriter, r *http.Request) e
 		return httperr.BadRequest(tr.TErr("error.fields-not-filled"))
 	}
 
-	/* Clear spaces */
-	payload.FirstName = strings.TrimSpace(payload.FirstName)
-	payload.LastName = strings.TrimSpace(payload.LastName)
+	valid := regexp.MustCompile(`^[\p{L}0-9_]+$`)
+
+	var firstNameStr, lastNameStr string
+	if payload.FirstName != nil {
+		firstNameStr = strings.TrimSpace(*payload.FirstName)
+		payload.FirstName = &firstNameStr
+
+		if !valid.MatchString(firstNameStr) {
+			return httperr.BadRequest(tr.TErr("error.invalid-characters-firstname"))
+		}
+	}
+
+	if payload.LastName != nil {
+		lastNameStr = strings.TrimSpace(*payload.LastName)
+		payload.LastName = &lastNameStr
+
+		if !valid.MatchString(lastNameStr) {
+			return httperr.BadRequest(tr.TErr("error.invalid-characters-lastname"))
+		}
+	}
+
+	if (payload.FirstName == nil || *payload.FirstName == "") && (payload.LastName == nil || *payload.LastName == "") {
+		return httperr.BadRequest(tr.TErr("error.at-least-one-name-required"))
+	}
+
 	password := strings.TrimSpace(payload.Password)
-
-	valid := regexp.MustCompile(`^[a-zA-Z0-9_]+$`)
-	if !valid.MatchString(payload.FirstName) {
-		return httperr.BadRequest(tr.TErr("error.invalid-characters-username"))
-	}
-
-	if !valid.MatchString(payload.LastName) {
-		return httperr.BadRequest(tr.TErr("error.invalid-characters-username"))
-	}
 
 	if _, chPass := constants.CheckSimplePasswords[strings.ToLower(password)]; chPass {
 		return httperr.BadRequest(tr.TErr("error.simple-password"))

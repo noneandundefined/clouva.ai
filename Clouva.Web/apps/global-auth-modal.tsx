@@ -5,14 +5,7 @@ import { ROUTES } from './constants/constants';
 import ModalAuth from './components/Modal/ModalAuth';
 import { CACHEKEYs } from './constants/CacheKeys.constants';
 
-const PUBLIC_ROUTES = new Set<string>([
-	ROUTES.HOME,
-	ROUTES.CLOUVA,
-	ROUTES.AUTH_CREATE_ACCOUNT,
-	ROUTES.AUTH_CONFIRM_EMAIL,
-	ROUTES.AUTH_SENT_CONFIRM_EMAIL,
-	ROUTES.AUTH_AUTHORIZE_DEVICE,
-]);
+const PUBLIC_ROUTES = new Set<string>([ROUTES.HOME, ROUTES.CLOUVA, ROUTES.AUTH_CREATE_ACCOUNT, ROUTES.AUTH_CONFIRM_EMAIL, ROUTES.AUTH_SENT_CONFIRM_EMAIL, ROUTES.AUTH_AUTHORIZE_DEVICE]);
 
 const GlobalAuthModal = () => {
 	const { pathname } = useLocation();

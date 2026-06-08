@@ -28,8 +28,8 @@ const AccountSetting = () => {
 	} = useForm<UserMeUpdateRequest>({
 		mode: 'onChange',
 		defaultValues: {
-			first_name: '',
-			last_name: '',
+			first_name: null,
+			last_name: null,
 		},
 	});
 
@@ -51,8 +51,8 @@ const AccountSetting = () => {
 
 	const onSubmitProfile = handleSubmit(async (data) => {
 		await basicUserProfileUpdate({
-			first_name: data.first_name.trim(),
-			last_name: data.last_name.trim(),
+			first_name: data.first_name?.trim() || null,
+			last_name: data.last_name?.trim() || null,
 		});
 
 		await reload();
@@ -80,8 +80,8 @@ const AccountSetting = () => {
 			</div>
 
 			<form onSubmit={onSubmitProfile} className="bg-white border border-[#e5e7eb] rounded-[0.6rem] space-y-5 p-5">
-				<div className="flex items-center">
-					<div className="w-[40%] md:w-[50%] text-sm">
+				<div className="flex flex-col space-y-2 sm:flex-row sm:items-center">
+					<div className="w-full sm:w-[40%] md:w-[50%] text-sm">
 						<p>{t('label.email')}</p>
 					</div>
 
@@ -131,8 +131,8 @@ const AccountSetting = () => {
 					</div>
 				</div>
 
-				<div className="flex items-center">
-					<div className="w-[40%] md:w-[50%] text-sm">
+				<div className="flex flex-col space-y-2 sm:flex-row sm:items-center">
+					<div className="w-full sm:w-[40%] md:w-[50%] text-sm">
 						<p>{t('label.first-name')}</p>
 					</div>
 
@@ -140,17 +140,14 @@ const AccountSetting = () => {
 						<GUInput
 							type="text"
 							className="!h-[2rem] !rounded-[6px]"
-							{...register('first_name', {
-								required: t('message.validation-required-field'),
-								minLength: { value: 3, message: t('message.validation-required-field') },
-							})}
+							{...register('first_name')}
 							error={errors.first_name?.message}
 						/>
 					</div>
 				</div>
 
-				<div className="flex items-center">
-					<div className="w-[40%] md:w-[50%] text-sm">
+				<div className="flex flex-col space-y-2 sm:flex-row sm:items-center">
+					<div className="w-full sm:w-[40%] md:w-[50%] text-sm">
 						<p>{t('label.last-name')}</p>
 					</div>
 
@@ -158,10 +155,7 @@ const AccountSetting = () => {
 						<GUInput
 							type="text"
 							className="!h-[2rem] !rounded-[6px]"
-							{...register('last_name', {
-								required: t('message.validation-required-field'),
-								minLength: { value: 3, message: t('message.validation-required-field') },
-							})}
+							{...register('last_name')}
 							error={errors.last_name?.message}
 						/>
 					</div>

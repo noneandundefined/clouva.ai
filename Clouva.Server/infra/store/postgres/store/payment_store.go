@@ -124,27 +124,6 @@ func (s *PaymentStore) Get_PaymentHistoryByYookassaPaymentID(ctx context.Context
 	return payment, nil
 }
 
-func (s *PaymentStore) Update_PaymentHistoryStatus(ctx context.Context, yookassaPaymentID, status string, paidAt *time.Time) error {
-	query := `
-		UPDATE payment_history
-		SET
-			status = $2,
-			paid_at = COALESCE($3, paid_at)
-		WHERE yookassa_payment_id = $1
-	`
-
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-
-	_, err := s.db.ExecContext(ctx, query, yookassaPaymentID, status, paidAt)
-	if err != nil {
-		logger.Error("Update_PaymentHistoryStatus req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
-		return err
-	}
-
-	return nil
-}
-
 func (s *PaymentStore) Get_UserSubscriptionBillingByUserUuid(ctx context.Context, userUuid string) (*models.UserSubscriptionBilling, error) {
 	query := `
 		SELECT
@@ -172,6 +151,48 @@ func (s *PaymentStore) Get_UserSubscriptionBillingByUserUuid(ctx context.Context
 	}
 
 	return billing, nil
+}
+
+func (s *PaymentStore) Get_PaymentActiveCount(ctx context.Context, userUuid string) (uint32, error) {
+	query := `
+		SELECT COUNT(*) FROM payment_history
+		WHERE user_uuid = $1
+  			AND status IN ('pending', 'waiting_for_capture')
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	var count uint32
+
+	err := s.db.QueryRowContext(ctx, query, userUuid).Scan(&count)
+	if err != nil {
+		logger.Error("Get_PaymentActiveCount req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (s *PaymentStore) Update_PaymentHistoryStatus(ctx context.Context, yookassaPaymentID, status string, paidAt *time.Time) error {
+	query := `
+		UPDATE payment_history
+		SET
+			status = $2,
+			paid_at = COALESCE($3, paid_at)
+		WHERE yookassa_payment_id = $1
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := s.db.ExecContext(ctx, query, yookassaPaymentID, status, paidAt)
+	if err != nil {
+		logger.Error("Update_PaymentHistoryStatus req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func (s *PaymentStore) Update_UserSubscriptionAutoRenew(ctx context.Context, userUuid string, enabled bool) error {
@@ -262,6 +283,25 @@ func (s *PaymentStore) Update_ClearYookassaPaymentMethod(ctx context.Context, us
 	_, err := s.db.ExecContext(ctx, query, userUuid)
 	if err != nil {
 		logger.Error("ClearYookassaPaymentMethod req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (s *PaymentStore) Delete_PaymentWithStatusPending(ctx context.Context) error {
+	query := `
+		DELETE FROM payment_history
+		WHERE status IN ('pending', 'waiting_for_capture')
+			AND created_at < now() - INTERVAL '10 minutes';
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := s.db.ExecContext(ctx, query)
+	if err != nil {
+		logger.Error("Delete_PaymentWithStatusPending req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
 		return err
 	}
 

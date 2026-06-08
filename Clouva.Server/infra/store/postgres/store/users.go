@@ -266,7 +266,7 @@ func (s *UserStore) Update_UserEmailConfirmedByUid(ctx context.Context, userUuid
 	return nil
 }
 
-func (s *UserStore) Update_UserProfile(ctx context.Context, userUuid, firstName, lastName string) error {
+func (s *UserStore) Update_UserProfile(ctx context.Context, userUuid string, firstName, lastName *string) error {
 	query := `
 		UPDATE user_cores SET first_name = $1, last_name = $2 WHERE user_uuid = $3
 	`

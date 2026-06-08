@@ -2,6 +2,7 @@ package user_handler_v1
 
 import (
 	"net/http"
+	"regexp"
 	"strings"
 
 	"clouva.ai.server/middleware"
@@ -30,10 +31,27 @@ func (h *Handler) UserProfileUpdateHandler_V1(w http.ResponseWriter, r *http.Req
 		return httperr.BadRequest(tr.TErr("error.fields-not-filled"))
 	}
 
-	firstName := strings.TrimSpace(payload.FirstName)
-	lastName := strings.TrimSpace(payload.LastName)
+	valid := regexp.MustCompile(`^[\p{L}0-9_]+$`)
 
-	if err := h.Store.Users.Update_UserProfile(ctx, authToken.User.UserUUID, firstName, lastName); err != nil {
+	if payload.FirstName != nil {
+		trimmed := strings.TrimSpace(*payload.FirstName)
+		payload.FirstName = &trimmed
+
+		if !valid.MatchString(trimmed) {
+			return httperr.BadRequest(tr.TErr("error.invalid-characters-firstname"))
+		}
+	}
+
+	if payload.LastName != nil {
+		trimmed := strings.TrimSpace(*payload.LastName)
+		payload.LastName = &trimmed
+
+		if !valid.MatchString(trimmed) {
+			return httperr.BadRequest(tr.TErr("error.invalid-characters-lastname"))
+		}
+	}
+
+	if err := h.Store.Users.Update_UserProfile(ctx, authToken.User.UserUUID, payload.FirstName, payload.LastName); err != nil {
 		return httperr.Db(ctx, err)
 	}
 

@@ -1,7 +1,7 @@
 export type SignupFormQuery = {
 	email?: string;
-	first_name?: string;
-	last_name?: string;
+	first_name?: string | null;
+	last_name?: string | null;
 };
 
 export const readSignupFormFromSearchParams = (params: URLSearchParams): SignupFormQuery => ({
@@ -21,8 +21,8 @@ export const writeSignupFormToSearchParams = (params: URLSearchParams, values: S
 	};
 
 	setOrDelete('email', values.email);
-	setOrDelete('first_name', values.first_name);
-	setOrDelete('last_name', values.last_name);
+	setOrDelete('first_name', values.first_name ?? undefined);
+	setOrDelete('last_name', values.last_name ?? undefined);
 };
 
 export const buildSentConfirmEmailPath = (email: string) => {

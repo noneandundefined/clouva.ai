@@ -1,5 +1,5 @@
 import axiosClient from './axios';
-import { toast } from 'react-toastify';
+import { notify } from '@/components/Notification/notify';
 import type { UserMeUpdateRequest } from '@/interface/user/userMeUpdateRequest.interface';
 
 const apiPath = '/users';
@@ -10,8 +10,8 @@ export interface UserLoginStateResponse {
 	created_at: string;
 	email: string;
 	email_confirmed: boolean;
-	first_name: string;
-	last_name: string;
+	first_name: string | null;
+	last_name: string | null;
 
 	/* User subscriptions */
 	plan_name: string;
@@ -53,7 +53,7 @@ export const basicUserSessionsGetList = async (): Promise<UserSessionResponse[]>
  */
 export const basicUserSessionsDisconnect = async (sessionId: string): Promise<void> => {
 	const response = await axiosClient.post(`${apiPath}/sessions/disconnect`, { session_id: sessionId });
-	toast.success(response.data.message);
+	notify.success(response.data.message);
 };
 
 /**
@@ -61,7 +61,7 @@ export const basicUserSessionsDisconnect = async (sessionId: string): Promise<vo
  */
 export const basicUserProfileUpdate = async (payload: UserMeUpdateRequest): Promise<void> => {
 	const response = await axiosClient.patch(`${apiPath}/me`, payload);
-	toast.success(response.data.message);
+	notify.success(response.data.message);
 };
 
 /**
@@ -69,5 +69,5 @@ export const basicUserProfileUpdate = async (payload: UserMeUpdateRequest): Prom
  */
 export const basicUserAccountDelete = async (): Promise<void> => {
 	const response = await axiosClient.delete(`${apiPath}/me`);
-	toast.success(response.data.message);
+	notify.success(response.data.message);
 };
