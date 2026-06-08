@@ -22,6 +22,15 @@ type logEntry struct {
 	message  string
 }
 
+func LogDir() string {
+	baseLogPath := os.Getenv("LOG_DIR")
+	if baseLogPath == "" {
+		baseLogPath = "./logs"
+	}
+
+	return strings.Trim(baseLogPath, `"' `)
+}
+
 func InitLogger() {
 	var err error
 	timeYkb, err = time.LoadLocation("Asia/Yekaterinburg")
@@ -32,6 +41,11 @@ func InitLogger() {
 	dev = os.Getenv("GO_ENV") == "DEV"
 
 	ensureLogDir()
+	if logDir == "" {
+		fmt.Fprintf(os.Stderr, "Logger init failed: could not create log directory (LOG_DIR=%q)\n", LogDir())
+	} else {
+		fmt.Fprintf(os.Stderr, "Logger initialized: %s\n", logDir)
+	}
 
 	/* Workers */
 	go logWorker()
@@ -50,7 +64,7 @@ func writeLog(filename, log string) {
 
 	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println("Error opening log file:", err)
+		fmt.Fprintf(os.Stderr, "Error opening log file %s: %v\n", filePath, err)
 		return
 	}
 	defer f.Close()
@@ -68,16 +82,11 @@ func ensureLogDir() {
 	month := fmt.Sprintf("%02d", now.Month())
 	year := fmt.Sprintf("%d", now.Year())
 
-	baseLogPath := os.Getenv("LOG_DIR")
-	if baseLogPath == "" {
-		baseLogPath = "./logs"
-	}
-
-	newLogDir := filepath.Join(baseLogPath, fmt.Sprintf("log_%s%s%s", day, month, year))
+	newLogDir := filepath.Join(LogDir(), fmt.Sprintf("log_%s%s%s", day, month, year))
 
 	if newLogDir != logDir {
-		if err := os.MkdirAll(newLogDir, os.ModePerm); err != nil {
-			fmt.Println("Error creating log directory:", err)
+		if err := os.MkdirAll(newLogDir, 0755); err != nil {
+			fmt.Fprintf(os.Stderr, "Error creating log directory %s: %v\n", newLogDir, err)
 			return
 		}
 
@@ -106,7 +115,7 @@ func logWithLevel(level, filename, format string, args ...any) {
 	select {
 	case logQueue <- logEntry{filename: filename, message: logMessage}:
 	default:
-		fmt.Println("Log queue full, message dropped:", logMessage)
+		fmt.Fprintf(os.Stderr, "Log queue full, message dropped: %s\n", logMessage)
 	}
 }
 

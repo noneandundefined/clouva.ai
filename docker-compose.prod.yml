@@ -57,8 +57,10 @@ services:
             context: Clouva.Server
             dockerfile: Dockerfile.prod
         env_file: './Clouva.Server/.env.production'
+        environment:
+            - LOG_DIR=/app/logs
         volumes:
-            - ./logs:/app/logs
+            - ./Clouva.Server/logs:/app/logs
         ports:
             - '8080:8080'
         depends_on:

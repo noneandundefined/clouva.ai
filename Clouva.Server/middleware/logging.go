@@ -39,12 +39,7 @@ func (l *Logger) getCurrentLogDir() string {
 
 	dirName := fmt.Sprintf("log_%s%s%s", day, month, year)
 
-	baseLogPath := os.Getenv("LOG_DIR")
-	if baseLogPath == "" {
-		baseLogPath = "./logs"
-	}
-
-	dir := filepath.Join(baseLogPath, dirName)
+	dir := filepath.Join(logger.LogDir(), dirName)
 
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		logger.Error("Failed to create log directory: %s", err.Error())

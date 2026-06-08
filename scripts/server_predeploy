@@ -4,6 +4,8 @@ set -e
 
 cd "/root/clouva.ai"
 
+mkdir -p Clouva.Server/logs
+
 echo "Stopping all docker containers..."
 docker compose -f docker-compose.prod.yml down
 
