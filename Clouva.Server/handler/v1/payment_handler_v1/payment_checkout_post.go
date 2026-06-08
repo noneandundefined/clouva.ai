@@ -92,7 +92,7 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 			"user_uuid": authToken.User.UserUUID,
 			"plan_name": plan.PlanName,
 		},
-		SavePaymentMethod: true,
+		SavePaymentMethod: false,
 	})
 	if err != nil {
 		logger.Error("PostCheckoutHandler_V1: %s", err.Error())
