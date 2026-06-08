@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"clouva.ai.server/infra/locale"
 	"clouva.ai.server/infra/logger"
@@ -15,20 +16,27 @@ import (
 func SendEmail(to, title, content string, tr locale.Translator) error {
 	go_env := os.Getenv("GO_ENV") == "DEV"
 
+	port, err := strconv.Atoi(strings.TrimSpace(os.Getenv("SMTP_PORT")))
+	if err != nil || port == 0 {
+		port = 587
+	}
+
+	smtpAddr := strings.Trim(os.Getenv("SMTP_ADDR"), `"' `)
+	smtpEmail := strings.Trim(os.Getenv("SMTP_EMAIL"), `"' `)
+	smtpPassword := strings.Trim(os.Getenv("SMTP_PASSWORD"), `"' `)
+
 	mail := gomail.NewMessage()
-	mail.SetHeader("From", os.Getenv("SMTP_EMAIL"))
+	mail.SetHeader("From", smtpEmail)
 	mail.SetHeader("To", to)
 	mail.SetHeader("Subject", title)
 	mail.SetBody("text/html", content)
 
-	port, _ := strconv.Atoi(os.Getenv("SMTP_PORT"))
-
-	d := gomail.NewDialer(os.Getenv("SMTP_ADDR"), port, os.Getenv("SMTP_EMAIL"), os.Getenv("SMTP_PASSWORD"))
+	d := gomail.NewDialer(smtpAddr, port, smtpEmail, smtpPassword)
+	// Port 465 — implicit SSL; port 587 — STARTTLS (SSL must be false).
+	d.SSL = port == 465
 
 	if go_env {
-		d.SSL = false
-	} else {
-		d.SSL = true
+		logger.Info("SendEmail: SMTP %s:%d ssl=%v", smtpAddr, port, d.SSL)
 	}
 
 	if err := d.DialAndSend(mail); err != nil {

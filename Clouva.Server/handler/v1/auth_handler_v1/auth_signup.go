@@ -52,8 +52,13 @@ func (h *Handler) AuthSignupHandler_V1(w http.ResponseWriter, r *http.Request) e
 		return httperr.BadRequest(tr.TErr("error.invalid-characters-username"))
 	}
 
-	if _, chPass := constants.CheckSimplePasswords[password]; chPass {
+	if _, chPass := constants.CheckSimplePasswords[strings.ToLower(password)]; chPass {
 		return httperr.BadRequest(tr.TErr("error.simple-password"))
+	}
+
+	normalizedEmail := util.NormalizeEmail(payload.Email)
+	if security.PasswordEqualsEmail(password, normalizedEmail) {
+		return httperr.BadRequest(tr.TErr("error.password-equals-email"))
 	}
 
 	tx, err := h.Db.BeginTx(ctx, nil)
@@ -73,8 +78,6 @@ func (h *Handler) AuthSignupHandler_V1(w http.ResponseWriter, r *http.Request) e
 	}
 
 	uuid := uuid.NewString()
-
-	normalizedEmail := util.NormalizeEmail(payload.Email)
 
 	userCore := &models.UserCore{
 		UserUUID:  uuid,

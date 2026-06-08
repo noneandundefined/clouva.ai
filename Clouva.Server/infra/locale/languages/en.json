@@ -57,6 +57,7 @@
 	"success-password-reset": "Password successfully changed!",
 	"error.invalid-characters-username": "Invalid characters in username",
 	"error.simple-password": "Password is too simple, please enter a new one",
+	"error.password-equals-email": "Password cannot be the same as your email address",
 	"error.failed-to-save-data": "Failed to save data, please try again later",
 	"confirm-email-title": "Clouva.ai Email Confirmation",
 	"request-email-mail": "We received a request to use this email address",

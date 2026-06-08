@@ -96,11 +96,11 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ close, user }) => {
 
 			<div className="h-[1px] w-full bg-[#EEEEEE]" />
 
-			<Link to={ROUTES.CLOUVA_PRICING} className="flex items-center rounded-[10px] cursor-pointer p-2 px-3 hover:bg-[#F9F9F9]">
+			<Link to={ROUTES.CLOUVA_PRICING} onClick={close} className="flex items-center rounded-[10px] cursor-pointer p-2 px-3 hover:bg-[#F9F9F9]">
 				<p className="text-sm">{t('label.settings-upgrade-business')}</p>
 			</Link>
 
-			<Link to={ROUTES.CLOUVA_SETTINGs} className="flex items-center rounded-[10px] cursor-pointer p-2 px-3 hover:bg-[#F9F9F9]">
+			<Link to={ROUTES.CLOUVA_SETTINGs} onClick={close} className="flex items-center rounded-[10px] cursor-pointer p-2 px-3 hover:bg-[#F9F9F9]">
 				<p className="text-sm">{t('label.settings-title')}</p>
 			</Link>
 

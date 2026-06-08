@@ -56,6 +56,7 @@
 	"success-password-reset": "Пароль успешно изменён!",
 	"error.invalid-characters-username": "Недопустимые символы в имени пользователя",
 	"error.simple-password": "Пароль слишком простой, введите новый",
+	"error.password-equals-email": "Пароль не может совпадать с адресом электронной почты",
 	"error.failed-to-save-data": "Не удалось сохранить данные, пожалуйста повторите попытку позже",
 	"confirm-email-title": "Подтверждения адреса электронной почты Clouva.ai",
 	"request-email-mail": "Мы получили запрос на использование адреса электронной почты",
