@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
 
     auto_renew_enabled BOOLEAN NOT NULL DEFAULT FALSE,
-    yookassa_payment_method_id VARCHAR(255),
-    payment_method_type VARCHAR(100),
+    yookassa_payment_method_id TEXT,
+    payment_method_type TEXT,
     payment_method_title TEXT,
     payment_method_saved_at TIMESTAMPTZ
 );

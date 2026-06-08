@@ -37,9 +37,10 @@ func (s *PaymentStore) Create_PaymentHistory(ctx context.Context, payment *model
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	row, err := pgqx.QueryRowContext[models.PaymentHistory](
+	var res models.PaymentHistory
+
+	err := s.db.QueryRowContext(
 		ctx,
-		s.db,
 		query,
 		payment.UserUUID,
 		payment.PlanName,
@@ -52,13 +53,29 @@ func (s *PaymentStore) Create_PaymentHistory(ctx context.Context, payment *model
 		payment.Description,
 		payment.PaidAt,
 		payment.Metadata,
+	).Scan(
+		&res.ID,
+		&res.CreatedAt,
+		&res.UpdatedAt,
+		&res.UserUUID,
+		&res.PlanName,
+		&res.YookassaPaymentID,
+		&res.YookassaPaymentMethodID,
+		&res.Amount,
+		&res.Currency,
+		&res.Status,
+		&res.PaymentKind,
+		&res.Description,
+		&res.PaidAt,
+		&res.Metadata,
 	)
+
 	if err != nil {
 		logger.Error("Create_PaymentHistory req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
 		return nil, err
 	}
 
-	return row, nil
+	return &res, nil
 }
 
 func (s *PaymentStore) Get_PaymentHistoryListByUserUuid(ctx context.Context, userUuid string, limit int) ([]models.PaymentHistory, error) {
