@@ -24,3 +24,57 @@ body {
 	margin: 0;
 	padding: 0;
 }
+
+.intro-circle {
+	width: 120px;
+	height: 120px;
+	background: #daf2ea;
+	opacity: 0.9 !important;
+	border-radius: 9999px;
+	position: absolute;
+}
+
+.expand {
+	animation: expandCircle 500ms ease-out forwards;
+}
+
+.fade-out {
+	animation: fadeOut 200ms ease-out forwards;
+}
+
+@keyframes expandCircle {
+	0% {
+		transform: scale(0);
+		opacity: 1;
+	}
+
+	100% {
+		transform: scale(25);
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes pulseOnce {
+	0% {
+		transform: scale(0.6);
+	}
+	50% {
+		transform: scale(1.15);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.animate-pulseOnce {
+	animation: pulseOnce 500ms ease-out;
+}

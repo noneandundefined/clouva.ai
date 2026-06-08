@@ -64,6 +64,8 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 	amountValue := fmt.Sprintf("%.2f", plan.Amount)
 	idempotenceKey := uuid.NewString()
 
+	returnURL := fmt.Sprintf("%s?payment_id=%s", h.Yookassa.ReturnURL(), idempotenceKey)
+
 	ykPayment, err := h.Yookassa.CreatePayment(ctx, idempotenceKey, yookassa.CreatePaymentRequest{
 		Amount: yookassa.Amount{
 			Value:    amountValue,
@@ -72,7 +74,7 @@ func (h *Handler) PostCheckoutHandler_V1(w http.ResponseWriter, r *http.Request)
 		Capture: true,
 		Confirmation: yookassa.Confirmation{
 			Type:      "redirect",
-			ReturnURL: h.Yookassa.ReturnURL(),
+			ReturnURL: returnURL,
 		},
 		Description: fmt.Sprintf("Clouva.ai %s subscription", plan.PlanName),
 		Metadata: map[string]string{

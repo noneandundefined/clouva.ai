@@ -201,6 +201,8 @@
 		"authorize-device-cancel": "Cancel",
 		"authorize-device-confirm": "Yes, Log in",
 		"ack-ai-one-model": "There may currently be increased load on the AI services. Request processing and response generation times may be longer than usual.",
-		"ack-ai-zero-model": "The AI service is temporarily unavailable due to maintenance. Please try again later."
+		"ack-ai-zero-model": "The AI service is temporarily unavailable due to maintenance. Please try again later.",
+		"success-paid-desc": "Your subscription has been activated. More advanced service features are now available to you.",
+		"payment-successful": "Payment was successful!"
 	}
 }

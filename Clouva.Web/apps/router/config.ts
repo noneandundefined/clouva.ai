@@ -15,6 +15,7 @@ const SentConfirmEmail = lazy(() => import('@/pages/SentConfirmEmailPage/index')
 
 /** SUBs */
 const Pricing = lazy(() => import('@/pages/PricingPage/index'));
+const PayStatus = lazy(() => import('@/pages/PayStatusPage/index'));
 
 export interface CustomRouteConfig {
 	path: string;
@@ -83,6 +84,14 @@ const config: CustomRouteConfig[] = [
 		redirectIfLogged: false,
 		title: 'meta.Pricing.title',
 		component: Pricing,
+	},
+	/** Pay */
+	{
+		path: ROUTES.PAY_STATUS,
+		loginRequired: true,
+		redirectIfLogged: false,
+		title: 'meta.PayStatus.title',
+		component: PayStatus,
 	},
 ];
 

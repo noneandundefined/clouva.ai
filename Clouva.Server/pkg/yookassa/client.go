@@ -33,7 +33,7 @@ func NewFromEnv() (*Client, error) {
 	if returnURL == "" {
 		clientURL := strings.TrimRight(strings.TrimSpace(os.Getenv("CLIENT_URL")), "/")
 		if clientURL != "" {
-			returnURL = clientURL + "/pricing?payment=success"
+			returnURL = clientURL + "/pay"
 		}
 	}
 
@@ -90,7 +90,7 @@ func (c *Client) doJSON(ctx context.Context, method, path, idempotenceKey string
 	}
 
 	auth := base64.StdEncoding.EncodeToString([]byte(c.shopID + ":" + c.secretKey))
-	
+
 	req.Header.Set("Authorization", "Basic "+auth)
 	req.Header.Set("Content-Type", "application/json")
 

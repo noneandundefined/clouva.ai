@@ -6,6 +6,8 @@ export const ROUTES = {
 	CLOUVA_SETTINGs: '/settings',
 	CLOUVA_PRICING: '/pricing',
 
+	PAY_STATUS: '/pay',
+
 	AUTH_AUTHORIZE_DEVICE: '/authorize',
 	AUTH_CREATE_ACCOUNT: '/create-account',
 	AUTH_CONFIRM_EMAIL: '/clouva-confirm-email',
