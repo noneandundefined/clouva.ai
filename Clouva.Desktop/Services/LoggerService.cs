@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Clouva.Desktop.Services
 {
-    public static class Logger
+    public static class LoggerService
     {
-        static Logger()
+        static LoggerService()
         {
             var path = Config.Current?.LOGS_PATH;
 

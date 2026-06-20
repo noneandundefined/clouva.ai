@@ -1,12 +1,62 @@
-﻿<Window x:Class="Clouva.Desktop.MainWindow"
+<Window x:Class="Clouva.Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clouva.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Clouva" Height="100" Width="220"
+        WindowStyle="None" ResizeMode="NoResize"
+        AllowsTransparency="True" Background="Transparent"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen">
+    <Border>
+        <Grid Margin="5,5,5,5" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="#000" CornerRadius="4,4,0,0" Cursor="Cross"
+                    Width="50" Height="15" Margin="80,3,80,72" Grid.RowSpan="2">
+                <Image Source="pack://application:,,,/Public/ico/fold-vertical.png" Width="13" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality" />
+            </Border>
+            
+            <Border Grid.Row="1" x:Name="MicButton" Grid.Column="0"
+                Background="#000" CornerRadius="28"
+                MaxWidth="150" Height="55" Cursor="Hand"
+                PreviewMouseLeftButtonDown="MicButton_PreviewMouseLeftButtonDown"
+                MouseLeftButtonDown="MicButton_MouseLeftButtonDown">
+
+                <Grid>
+                    <Image Source="pack://application:,,,/Public/ico/mic.png" Width="33" x:Name="MicIcon" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality" />
+
+                    <StackPanel x:Name="Bars"
+                                Orientation="Horizontal"
+                                Visibility="Collapsed"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+
+                        <Border x:Name="B1" Width="4" Height="8" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B2" Width="4" Height="14" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B3" Width="4" Height="22" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B4" Width="4" Height="30" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B5" Width="4" Height="22" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B6" Width="4" Height="14" Background="White" CornerRadius="2" Margin="3"/>
+                        <Border x:Name="B7" Width="4" Height="8" Background="White" CornerRadius="2" Margin="3"/>
+
+                    </StackPanel>
+                </Grid>
+
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+
+                <Border.RenderTransformOrigin>
+                    0.5,0.5
+                </Border.RenderTransformOrigin>
+            </Border>
+        </Grid>
+    </Border>
 </Window>

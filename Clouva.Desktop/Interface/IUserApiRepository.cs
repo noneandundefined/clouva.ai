@@ -1,3 +1,4 @@
+using Clouva.Desktop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace Clouva.Desktop.Interface
 {
     public interface IUserApiRepository
     {
-
+        Task<REST_UserLoginStateModel?> UserGetLoginState();
     }
 }

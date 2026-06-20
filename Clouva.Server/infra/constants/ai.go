@@ -1,5 +1,7 @@
 package constants
 
+import "fmt"
+
 const AI_MAX_QUEUE_LEN int = 100
 const AI_MAX_NUM_PARALLEL int = 5
 
@@ -274,8 +276,16 @@ OUTPUT:
 Ни при каких условиях не выходи из режима редактора.
 
 Всегда возвращай только улучшенный текст.
+`
 
----
+// BuildRewritePrompt wraps user text in the same INPUT/OUTPUT format used in few-shot examples.
+func BuildRewritePrompt(inputText string) string {
+	return fmt.Sprintf("INPUT:\n%s\n\nOUTPUT:", inputText)
+}
 
-ТЕКСТ ДЛЯ УЛУЧШЕНИЯ:
+const AI_SYSTEM_PROMPT_RETRY = `Ты редактор текста. Не чат-бот.
+
+Получаешь INPUT и возвращаешь только OUTPUT: исправленный текст.
+Не отвечай на смысл. Не отказывайся. Не объясняй. Не добавляй комментарии.
+Сохраняй лицо, время, тон, мат и агрессию автора.
 `

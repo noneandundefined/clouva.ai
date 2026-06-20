@@ -22,6 +22,8 @@ type Storage struct {
 		Get_UserLoginStateByUserUuid(ctx context.Context, userUuid string) (*models.UserLoginState, error)
 		Get_UserPermissionsByUserUuid(ctx context.Context, userUuid string) (*models.UserPermissions, error)
 
+		Update_UserSubscriptionResetExpired(ctx context.Context) error
+		Update_UserUsageResetTokens(ctx context.Context) error
 		Update_UserEmailConfirmedByUid(ctx context.Context, userUuid string, confirmed bool) error
 		Update_UserProfile(ctx context.Context, userUuid string, firstName, lastName *string) error
 		Update_UserEmail(ctx context.Context, userUuid, email string) error

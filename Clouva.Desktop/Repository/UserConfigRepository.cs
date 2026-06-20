@@ -37,7 +37,7 @@ namespace Clouva.Desktop.Repository
             }
             catch (Exception ex)
             {
-                Logger.Error($"Ошибка чтения user.config: {ex.Message}");
+                LoggerService.Error($"Ошибка чтения user.config: {ex.Message}");
                 return new XDocument(new XElement(ROOT_ELEMENT));
             }
         }
@@ -56,7 +56,7 @@ namespace Clouva.Desktop.Repository
             }
             catch (Exception ex)
             {
-                Logger.Error($"Ошибка записи user.config: {ex.Message}");
+                LoggerService.Error($"Ошибка записи user.config: {ex.Message}");
             }
         }
 
@@ -73,7 +73,7 @@ namespace Clouva.Desktop.Repository
             }
             catch (Exception ex)
             {
-                Logger.Error($"Ошибка при получении ключа '{key}': {ex.Message}");
+                LoggerService.Error($"Ошибка при получении ключа '{key}': {ex.Message}");
                 return null;
             }
         }
@@ -114,7 +114,7 @@ namespace Clouva.Desktop.Repository
             }
             catch (Exception ex)
             {
-                Logger.Error($"Ошибка при добавлении/обновлении '{key}': {ex.Message}");
+                LoggerService.Error($"Ошибка при добавлении/обновлении '{key}': {ex.Message}");
             }
         }
 
@@ -136,7 +136,7 @@ namespace Clouva.Desktop.Repository
             }
             catch (Exception ex)
             {
-                Logger.Error($"Ошибка при удалении ключа '{key}': {ex.Message}");
+                LoggerService.Error($"Ошибка при удалении ключа '{key}': {ex.Message}");
             }
         }
     }

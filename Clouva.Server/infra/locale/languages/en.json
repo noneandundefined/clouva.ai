@@ -28,6 +28,7 @@
 	"error.malicious-request-parameter": "Invalid content in parameter",
 	"error.malicious-content-body": "Invalid content in request body",
 	"error.fields-not-filled": "Not all fields are filled",
+	"error.audio-not-supported": "Send text, not an audio file",
 	"error.logged-out": "You have been logged out",
 	"password-reset-data-subject": "Clouva.ai password reset",
 	"go-to-link-reset-password": "Please follow the link to set a new password",

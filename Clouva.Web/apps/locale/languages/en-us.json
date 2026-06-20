@@ -203,6 +203,20 @@
 		"ack-ai-one-model": "There may currently be increased load on the AI services. Request processing and response generation times may be longer than usual.",
 		"ack-ai-zero-model": "The AI service is temporarily unavailable due to maintenance. Please try again later.",
 		"success-paid-desc": "Your subscription has been activated. More advanced service features are now available to you.",
-		"payment-successful": "Payment was successful!"
+		"payment-successful": "Payment was successful!",
+		"premium-waiting": "Premium is waiting for you",
+		"change-plan-title": "Change plan",
+		"change-plan-warning": "You are about to switch to the {{plan}} plan.",
+		"change-plan-downgrade-hint": "Your plan will change on {{date}}. Until your current billing period ends, your {{plan}} subscription will remain active.",
+		"change-plan-premium-hint": "Premium gives you more tokens, faster AI responses, and advanced account settings.",
+		"change-plan-confirm": "Change plan",
+		"change-plan-cancel": "Cancel",
+		"change-plan-downgrade-success": "Auto-renewal has been disabled. Your plan will switch on {{date}}.",
+		"modal-cancel": "Cancel",
+		"sign-out-title": "Sign out",
+		"sign-out-hint": "Are you sure you want to sign out?",
+		"revoke-device-title": "Revoke device",
+		"revoke-device-hint": "{{device}} will be disconnected from your account.",
+		"delete-account-title": "Delete account"
 	}
 }

@@ -100,6 +100,31 @@ func RedisSessionCreate(s *types.Session) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	if s.Platform == "device" && s.DeviceId != "" {
+		existingSessionIds, err := RedisDeviceSessionIDs(s.UserUuid)
+		if err != nil {
+			return "", err
+		}
+
+		for _, existingSessionId := range existingSessionIds {
+			existingSession, err := RedisSessionGet(existingSessionId)
+			if err != nil {
+				return "", err
+			}
+
+			if existingSession == nil {
+				_ = RedisDeviceSessionRemove(s.UserUuid, existingSessionId)
+				continue
+			}
+
+			if existingSession.Platform == "device" && existingSession.DeviceId == s.DeviceId {
+				if err := RedisSessionDelete(existingSessionId); err != nil {
+					return "", err
+				}
+			}
+		}
+	}
+
 	exists, err := client.Exists(ctx, key).Result()
 	if err != nil {
 		return "", err

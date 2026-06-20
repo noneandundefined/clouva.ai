@@ -250,6 +250,49 @@ func (s *UserStore) Get_UserPermissionsByUserUuid(ctx context.Context, userUuid 
 	return permissions, nil
 }
 
+func (s *UserStore) Update_UserSubscriptionResetExpired(ctx context.Context) error {
+	query := `
+		UPDATE user_subscriptions
+		SET
+			plan_name = 'Free',
+			tokens_limit = subscriptions.tokens_used,
+			is_active = false,
+			updated_at = NOW()
+		FROM subscriptions
+		WHERE subscriptions.plan_name = 'Free'
+			AND user_subscriptions.is_active = true
+			AND user_subscriptions.valid_to IS NOT NULL
+			AND user_subscriptions.valid_to <= NOW()
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	if _, err := s.db.ExecContext(ctx, query); err != nil {
+		logger.Error("Update_UserSubscriptionResetExpired req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (s *UserStore) Update_UserUsageResetTokens(ctx context.Context) error {
+	query := `
+		UPDATE user_usages
+		SET tokens_used = GREATEST(tokens_used - 240, 0), updated_at = NOW()
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	if _, err := s.db.ExecContext(ctx, query); err != nil {
+		logger.Error("Update_UserUsageResetTokens req={%s}: Failed to exec sql: %s", ctx.Value("XREQID").(string), err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func (s *UserStore) Update_UserEmailConfirmedByUid(ctx context.Context, userUuid string, confirmed bool) error {
 	query := `
 		UPDATE user_cores SET email_confirmed = $1 WHERE user_uuid = $2

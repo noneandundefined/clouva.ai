@@ -78,17 +78,6 @@ func (h *Handler) AuthSigninHandler_V1(w http.ResponseWriter, r *http.Request) e
 		return httperr.Db(ctx, err)
 	}
 
-	// authTokenCookie := &http.Cookie{
-	// 	Name:     "auth-token",
-	// 	Value:    sessionId,
-	// 	Path:     "/",
-	// 	Expires:  time.Now().Add(24 * time.Hour),
-	// 	SameSite: http.SameSiteStrictMode,
-	// 	HttpOnly: true,
-	// 	Secure:   !env,
-	// }
-	// http.SetCookie(w, authTokenCookie)
-
 	httpx.HttpResponseWithETag(w, r, http.StatusOK, map[string]string{
 		"status":  "signed_in",
 		"message": sessionId,

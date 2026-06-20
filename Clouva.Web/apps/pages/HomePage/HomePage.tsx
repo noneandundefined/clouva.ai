@@ -1,34 +1,55 @@
 import PageLayout from '../PageLayout';
+import { useEffect, useState } from 'react';
+import { getAuthState } from '@/private-route';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAudioLevel } from '@/hooks/useAudioLevel';
 import { useAckAiModels } from '@/context/useAckAiModels';
 import { useSpeechToText } from '@/hooks/useSpeechToText';
-import { CACHEKEYs } from '@/constants/CacheKeys.constants';
+import { useSubscriptionAd } from '@/hooks/useSubscriptionAd';
 import { GUITextarea } from '@/components/ui/Input/GUITextarea';
+import { clearRedirectUrl, getRedirectUrl } from '@/utils/ReturnUrlUtils';
 import WaveAnimation from '@/components/common/WaveAnimation/WaveAnimation';
 
 import Microphone from '@/components/@icons/microphone';
 import PencilPlusOutline from '@/components/@icons/pencil-plus-outline';
 import InformationOutline from '@/components/@icons/information-outline';
+import SubscriptionAd from '@/components/common/SubscriptionAd/SubscriptionAd';
 
 const HomePage = () => {
+	const { isOpen, closeAd } = useSubscriptionAd();
+
+	const navigate = useNavigate();
+
 	const ackAiModels = useAckAiModels();
 	const { t, i18n } = useTranslation();
 
 	const speechLang = i18n.language.startsWith('en') ? 'en-US' : 'ru-RU';
 	const { text, setText, isRecording, toggle, loadingRewrite } = useSpeechToText(speechLang);
 
-	/** Auth Session */
-	const lsession = localStorage.getItem(CACHEKEYs.L_SESSION);
-	const isAuthenticated = !!lsession;
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	useEffect(() => {
+		getAuthState().then(setIsAuthenticated);
+	}, []);
 
 	const level = useAudioLevel(isRecording);
+
+	useEffect(() => {
+		if (!isAuthenticated) return;
+
+		const returnUrl = getRedirectUrl();
+		if (!returnUrl) return;
+
+		clearRedirectUrl();
+		navigate(returnUrl, { replace: true });
+	}, [isAuthenticated, navigate]);
 
 	return (
 		<PageLayout>
 			<div className="h-full flex flex-1 flex-col justify-between">
-				<div className="flex-1 flex items-center justify-center z-[1]">
+				<div className="flex-1 flex flex-col space-y-1 items-center justify-center z-[1]">
 					<p className="font-semibold text-[2rem] md:text-[3rem] text-center max-w-[600px]">{t('message.speak-dont-type')}</p>
+					<SubscriptionAd open={isOpen} close={closeAd} />
 				</div>
 
 				<div className="px-0 lg:px-[20vw] space-y-5">

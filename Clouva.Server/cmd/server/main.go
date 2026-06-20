@@ -72,10 +72,13 @@ func main() {
 		aiEnc:   enc,
 	}
 	server.cron = cron.New()
-	server.cron.Start()
 
 	/* cron */
 	server.startPaymentClearPending()
+	server.startUsersUsageResetTokens()
+	server.startUsersSubscriptionResetExpired()
+
+	server.cron.Start()
 
 	/* Started HTTPx server */
 	if err := server.httpStart(); err != nil {

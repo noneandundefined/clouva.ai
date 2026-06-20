@@ -1,10 +1,12 @@
+import Modal from '@/components/Modal/Modal';
 import Check from '@/components/@icons/check';
 import { useTranslation } from 'react-i18next';
 import { basicUserLoginState } from '@/rest/userAPI';
-import { basicPaymentCheckout } from '@/rest/paymentAPI';
 import GUIButton from '@/components/ui/Button/GUIButton';
 import type { SubscriptionResponse } from '@/rest/subAPI';
+import { useModalContext } from '@/context/useModalContext';
 import { useHandleServer } from '@/hooks/Server/useHandleServer';
+import ModalChangePlan from '@/components/Modal/ModalChangePlan';
 
 interface PricingCardProps {
 	sub: SubscriptionResponse;
@@ -13,20 +15,24 @@ interface PricingCardProps {
 const PricingCard: React.FC<PricingCardProps> = ({ sub }) => {
 	const { t, i18n } = useTranslation();
 
+	const { open } = useModalContext();
+
 	const { data: respUserLoginState } = useHandleServer(['respUserLoginState'], basicUserLoginState);
 
 	const isCurrentPlan = respUserLoginState?.plan_name.toLowerCase() === sub.plan_name.toLowerCase();
-	const isFreePlan = sub.amount <= 0;
-
-	const canCheckout = !isCurrentPlan && !isFreePlan;
+	const canChangePlan = !isCurrentPlan;
+	const targetPlan = sub.plan_name.toLowerCase() === 'free' ? 'free' : 'premium';
 
 	const langKey = i18n.language.startsWith('ru') ? 'ru' : 'en';
 
 	const isPremium = sub.plan_name.toLowerCase() != 'free';
 
-	const handleCheckout = async () => {
-		const { confirmation_url } = await basicPaymentCheckout({ plan_name: sub.plan_name });
-		window.location.assign(confirmation_url);
+	const handleOpenChangePlan = () => {
+		open(
+			<Modal title={t('message.change-plan-title')}>
+				<ModalChangePlan plan={targetPlan} planName={sub.plan_name} />
+			</Modal>
+		);
 	};
 
 	return (
@@ -75,8 +81,8 @@ const PricingCard: React.FC<PricingCardProps> = ({ sub }) => {
 
 			<GUIButton
 				className={`!text-[15px] !h-[2.5rem] !mt-3 ${isCurrentPlan ? '!cursor-not-allowed' : '!bg-white !text-black hover:opacity-80'}`}
-				disabled={!canCheckout}
-				onClick={canCheckout ? handleCheckout : undefined}
+				disabled={!canChangePlan}
+				onClick={canChangePlan ? handleOpenChangePlan : undefined}
 			>
 				{isCurrentPlan ? t('label.pricing-current') : t('label.pricing-get-started')}
 			</GUIButton>

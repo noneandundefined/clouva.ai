@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import Modal from '@/components/Modal/Modal';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
 import { formatRelativeTime } from '@/utils/TimeUtils';
+import { basicUserSessionsGetList } from '@/rest/userAPI';
+import { useModalContext } from '@/context/useModalContext';
 import { useHandleServer } from '@/hooks/Server/useHandleServer';
-import { basicUserSessionsDisconnect, basicUserSessionsGetList } from '@/rest/userAPI';
+import ModalRevokeDevice from '@/components/Modal/ModalRevokeDevice';
 
 const WebIcon = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-[18px] w-[18px] text-[#7d7d7d]">
@@ -28,26 +29,16 @@ const DesktopIcon = () => (
 const DevicesSetting = () => {
 	const { t, i18n } = useTranslation();
 
-	const queryClient = useQueryClient();
+	const { open } = useModalContext();
 
-	const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
+	const { data: respUserSessions, loading: loadingUserSessions } = useHandleServer(['respUserSessions'], basicUserSessionsGetList);
 
-	const { data: respUserSessions, loading: loadingUserSessions, reload: reloadUserSessions } = useHandleServer(['respUserSessions'], basicUserSessionsGetList);
-
-	const handleDisconnect = async (sessionId: string) => {
-		if (disconnectingId) return;
-
-		setDisconnectingId(sessionId);
-
-		try {
-			await basicUserSessionsDisconnect(sessionId);
-
-			await reloadUserSessions();
-
-			queryClient.invalidateQueries({ queryKey: ['respUserSessions'] });
-		} finally {
-			setDisconnectingId(null);
-		}
+	const handleOpenRevoke = (sessionId: string, platform: string) => {
+		open(
+			<Modal title={t('message.revoke-device-title')}>
+				<ModalRevokeDevice sessionId={sessionId} platform={platform} />
+			</Modal>
+		);
 	};
 
 	const platformLabel = (platform: string) => {
@@ -93,11 +84,10 @@ const DevicesSetting = () => {
 									{!session.current && (
 										<button
 											type="button"
-											disabled={disconnectingId === session.session_id}
-											onClick={() => handleDisconnect(session.session_id)}
-											className="rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-[5px] text-[14px] text-[#111] transition hover:bg-[#fafafa] disabled:opacity-50"
+											onClick={() => handleOpenRevoke(session.session_id, session.platform)}
+											className="rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-[5px] text-[14px] text-[#111] transition hover:bg-[#fafafa]"
 										>
-											{disconnectingId === session.session_id ? t('message.loading') : t('label.settings-revoke')}
+											{t('label.settings-revoke')}
 										</button>
 									)}
 								</div>

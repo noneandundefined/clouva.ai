@@ -137,12 +137,7 @@ const AccountSetting = () => {
 					</div>
 
 					<div className="flex-1">
-						<GUInput
-							type="text"
-							className="!h-[2rem] !rounded-[6px]"
-							{...register('first_name')}
-							error={errors.first_name?.message}
-						/>
+						<GUInput type="text" className="!h-[2rem] !rounded-[6px]" {...register('first_name')} error={errors.first_name?.message} />
 					</div>
 				</div>
 
@@ -152,12 +147,7 @@ const AccountSetting = () => {
 					</div>
 
 					<div className="flex-1">
-						<GUInput
-							type="text"
-							className="!h-[2rem] !rounded-[6px]"
-							{...register('last_name')}
-							error={errors.last_name?.message}
-						/>
+						<GUInput type="text" className="!h-[2rem] !rounded-[6px]" {...register('last_name')} error={errors.last_name?.message} />
 					</div>
 				</div>
 

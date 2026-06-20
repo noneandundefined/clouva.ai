@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useModalContext } from '@/context/useModalContext';
 
 interface ModalProps {
+	title?: string;
 	width?: string;
 	onClose?: () => void;
 	children: React.ReactNode;
 }
 
 /* Global component for create modal components */
-const Modal: React.FC<ModalProps> = ({ width = '600px', onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ title, width = '600px', onClose, children }) => {
 	const { t } = useTranslation();
 
 	const { close } = useModalContext();
@@ -53,7 +54,11 @@ const Modal: React.FC<ModalProps> = ({ width = '600px', onClose, children }) => 
 				role="dialog"
 				aria-modal="true"
 			>
-				<div className="flex items-center justify-end mb-4">
+				<div className="flex items-center justify-between mb-4">
+					<div>
+						<p className="text-sm sm:text-[15px] text-left font-medium text-[#333]">{title}</p>
+					</div>
+
 					<Tooltip title={t('label.close')} position="bottom">
 						<div className="text-[#666] bg-white hover:bg-[#f1f1f1] hover:bg-[#f9f9f9] rounded-[8px] p-[8px] cursor-pointer text-[1.1rem]" onClick={handleClose}>
 							<Close fill="#444" size={17} />

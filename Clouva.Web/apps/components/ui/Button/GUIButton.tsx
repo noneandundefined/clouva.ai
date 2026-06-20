@@ -23,7 +23,7 @@ const GUIButton: React.FC<GUIButtonProps> = ({ disabled, children, className, on
 	};
 
 	return (
-		<div className="flex items-center">
+		<div className="flex flex-1 items-center">
 			<button
 				{...props}
 				type={type}

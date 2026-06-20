@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +13,10 @@ namespace Clouva.Desktop
     /// </summary>
     public partial class App : Application
     {
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            var bootstrap = new BootstrapWindow();
+            bootstrap.Show();
+        }
     }
 }

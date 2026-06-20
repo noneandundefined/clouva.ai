@@ -1,50 +1,33 @@
-import { useState } from 'react';
+import Modal from '@/components/Modal/Modal';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/constants/constants';
-import { basicAuthSignOut } from '@/rest/authAPI';
-import { CACHEKEYs } from '@/constants/CacheKeys.constants';
+import { basicUserLoginState } from '@/rest/userAPI';
+import ModalSignOut from '@/components/Modal/ModalSignOut';
+import { useModalContext } from '@/context/useModalContext';
 import { useHandleServer } from '@/hooks/Server/useHandleServer';
-import { basicUserAccountDelete, basicUserLoginState } from '@/rest/userAPI';
+import ModalDeleteAccount from '@/components/Modal/ModalDeleteAccount';
 
 const MoreSetting = () => {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
+	const { open } = useModalContext();
 
 	const { data: user } = useHandleServer(['respUserLoginState'], basicUserLoginState);
 
-	const [signingOut, setSigningOut] = useState(false);
-	const [deleting, setDeleting] = useState(false);
-
-	const handleSignOut = async () => {
-		if (signingOut) return;
-
-		setSigningOut(true);
-
-		try {
-			await basicAuthSignOut();
-		} finally {
-			localStorage.removeItem(CACHEKEYs.L_SESSION);
-			setSigningOut(false);
-
-			navigate(ROUTES.HOME);
-		}
+	const handleOpenSignOut = () => {
+		open(
+			<Modal title={t('message.sign-out-title')}>
+				<ModalSignOut />
+			</Modal>
+		);
 	};
 
-	const handleDeleteAccount = async () => {
-		if (deleting || !user?.can_delete_account) return;
+	const handleOpenDeleteAccount = () => {
+		if (!user?.can_delete_account) return;
 
-		if (!window.confirm(t('message.delete-account-confirm'))) return;
-
-		setDeleting(true);
-
-		try {
-			await basicUserAccountDelete();
-			localStorage.removeItem(CACHEKEYs.L_SESSION);
-			navigate(ROUTES.HOME);
-		} finally {
-			setDeleting(false);
-		}
+		open(
+			<Modal title={t('message.delete-account-title')}>
+				<ModalDeleteAccount />
+			</Modal>
+		);
 	};
 
 	return (
@@ -60,11 +43,10 @@ const MoreSetting = () => {
 
 					<button
 						type="button"
-						disabled={signingOut}
-						onClick={handleSignOut}
-						className="rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-[5px] text-[14px] text-[#111] transition hover:bg-[#fafafa] disabled:opacity-50"
+						onClick={handleOpenSignOut}
+						className="rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-[5px] text-[14px] text-[#111] transition hover:bg-[#fafafa]"
 					>
-						{signingOut ? t('message.loading') : t('label.settings-log-out')}
+						{t('label.settings-log-out')}
 					</button>
 				</div>
 
@@ -74,11 +56,10 @@ const MoreSetting = () => {
 
 						<button
 							type="button"
-							disabled={deleting}
-							onClick={handleDeleteAccount}
-							className="rounded-[8px] border border-[#f0c0c0] bg-white px-3 py-[5px] text-[14px] text-[#c00] transition hover:bg-[#fff5f5] disabled:opacity-50"
+							onClick={handleOpenDeleteAccount}
+							className="rounded-[8px] border border-[#f0c0c0] bg-white px-3 py-[5px] text-[14px] text-[#c00] transition hover:bg-[#fff5f5]"
 						>
-							{deleting ? t('message.loading') : t('label.delete')}
+							{t('label.delete')}
 						</button>
 					</div>
 				)}

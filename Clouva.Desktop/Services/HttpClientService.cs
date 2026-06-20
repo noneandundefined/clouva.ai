@@ -4,8 +4,10 @@ using Clouva.Desktop.Models;
 using Clouva.Desktop.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -43,17 +45,20 @@ namespace Clouva.Desktop.Services
         {
             try
             {
+                var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
                 var response = await this._httpClient.GetAsync(endpoint);
-                return await this.HandleResponse<T>(response, "GET", endpoint);
+
+                return await this.HandleResponse<T>(response, request, "GET", endpoint);
             }
             catch (HttpRequestException ex)
             {
-                Logger.Error($"Network error: {ex.Message}");
+                LoggerService.Error($"Network error: {ex.Message}");
                 this.ShowError("Ошибка сети: нет соединения с сервером.");
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error: {ex.Message}");
+                LoggerService.Error($"Unexpected error: {ex.Message}");
                 this.ShowError($"Неизвестная ошибка: {ex.Message}");
             }
 
@@ -71,17 +76,23 @@ namespace Clouva.Desktop.Services
                 var json = JsonSerializer.Serialize(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await this._httpClient.PostAsync(endpoint, content);
-                return await HandleResponse<T>(response, "POST", endpoint);
+                var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+                {
+                    Content = content
+                };
+
+                var response = await this._httpClient.SendAsync(request);
+
+                return await HandleResponse<T>(response, request, "POST", endpoint);
             }
             catch (HttpRequestException ex)
             {
-                Logger.Error($"Network error: {ex.Message}");
+                LoggerService.Error($"Network error: {ex.Message}");
                 this.ShowError("Ошибка сети: нет соединения с сервером.");
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error: {ex.Message}");
+                LoggerService.Error($"Unexpected error: {ex.Message}");
                 this.ShowError($"Неизвестная ошибка: {ex.Message}");
             }
 
@@ -99,17 +110,23 @@ namespace Clouva.Desktop.Services
                 var json = JsonSerializer.Serialize(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await this._httpClient.PutAsync(endpoint, content);
-                return await HandleResponse<T>(response, "PUT", endpoint);
+                var request = new HttpRequestMessage(HttpMethod.Put, endpoint)
+                {
+                    Content = content
+                };
+
+                var response = await this._httpClient.SendAsync(request);
+
+                return await HandleResponse<T>(response, request, "PUT", endpoint);
             }
             catch (HttpRequestException ex)
             {
-                Logger.Error($"Network error: {ex.Message}");
+                LoggerService.Error($"Network error: {ex.Message}");
                 this.ShowError("Ошибка сети: нет соединения с сервером.");
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error: {ex.Message}");
+                LoggerService.Error($"Unexpected error: {ex.Message}");
                 this.ShowError($"Неизвестная ошибка: {ex.Message}");
             }
 
@@ -133,16 +150,17 @@ namespace Clouva.Desktop.Services
                 };
 
                 var response = await this._httpClient.SendAsync(request);
-                return await HandleResponse<T>(response, "PATCH", endpoint);
+
+                return await HandleResponse<T>(response, request, "PATCH", endpoint);
             }
             catch (HttpRequestException ex)
             {
-                Logger.Error($"Network error: {ex.Message}");
+                LoggerService.Error($"Network error: {ex.Message}");
                 this.ShowError("Ошибка сети: нет соединения с сервером.");
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error: {ex.Message}");
+                LoggerService.Error($"Unexpected error: {ex.Message}");
                 this.ShowError($"Неизвестная ошибка: {ex.Message}");
             }
 
@@ -157,18 +175,86 @@ namespace Clouva.Desktop.Services
         {
             try
             {
-                var response = await this._httpClient.DeleteAsync(endpoint);
-                return await HandleResponse<T>(response, "DELETE", endpoint);
+                var request = new HttpRequestMessage(HttpMethod.Delete, endpoint);
+
+                var response = await this._httpClient.SendAsync(request);
+
+                return await HandleResponse<T>(response, request, "DELETE", endpoint);
             }
             catch (HttpRequestException ex)
             {
-                Logger.Error($"Network error: {ex.Message}");
+                LoggerService.Error($"Network error: {ex.Message}");
                 this.ShowError("Ошибка сети: нет соединения с сервером.");
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error: {ex.Message}");
+                LoggerService.Error($"Unexpected error: {ex.Message}");
                 this.ShowError($"Неизвестная ошибка: {ex.Message}");
+            }
+
+            return default;
+        }
+
+        #endregion
+
+        #region FILE
+
+        public async Task<T?> PostTextAsFileAsync<T>(string endpoint, string text, string fileName = "input.txt") where T : class
+        {
+            var tempPath = Path.Combine(Path.GetTempPath(), $"clouva-input-{Guid.NewGuid():N}.txt");
+
+            try
+            {
+                File.WriteAllText(tempPath, text, Encoding.UTF8);
+                return await this.PostFileAsync<T>(endpoint, tempPath, "file");
+            }
+            finally
+            {
+                try
+                {
+                    if (File.Exists(tempPath))
+                    {
+                        File.Delete(tempPath);
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        public async Task<T?> PostFileAsync<T>(string endpoint, string filePath, string fieldName = "file") where T : class
+        {
+            try
+            {
+                using var form = new MultipartFormDataContent();
+
+                using var stream = File.OpenRead(filePath);
+
+                var fileContent = new StreamContent(stream);
+
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                form.Add(fileContent, fieldName, Path.GetFileName(filePath));
+
+                var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+                {
+                    Content = form
+                };
+
+                var response = await this._httpClient.SendAsync(request);
+
+                return await HandleResponse<T>(response, request, "POST", endpoint);
+            }
+            catch (HttpRequestException ex)
+            {
+                LoggerService.Error($"Network error: {ex.Message}");
+                ShowError("Ошибка сети: нет соединения с сервером.");
+            }
+            catch (Exception ex)
+            {
+                LoggerService.Error($"Unexpected error: {ex.Message}");
+                ShowError($"Неизвестная ошибка: {ex.Message}");
             }
 
             return default;
@@ -180,15 +266,52 @@ namespace Clouva.Desktop.Services
 
         #region Response Handling
 
-        public async Task<T> HandleResponse<T>(HttpResponseMessage response, string method, string endpoint) where T : class
+        public async Task<T> HandleResponse<T>(HttpResponseMessage response, HttpRequestMessage request, string method, string endpoint) where T : class
         {
             var text = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
+                // PoW DDoS
+                if ((int)response.StatusCode == 429)
+                {
+                    try
+                    {
+                        var doc = JsonDocument.Parse(text);
+
+                        if (doc.RootElement.TryGetProperty("error", out var error))
+                        {
+                            string challenge = error.GetProperty("challenge").GetString();
+                            int difficulty = int.Parse(error.GetProperty("difficulty").GetString());
+
+                            LoggerService.Info($"PoW required. Difficulty={difficulty}");
+
+                            string nonce = await Task.Run(() => PowSolverService.Solve(challenge, difficulty));
+
+                            LoggerService.Info($"PoW solved: {nonce}");
+
+                            var retry = await this.CloneRequestAsync(request);
+
+                            retry.Headers.Add("Pow-Challenge", challenge);
+                            retry.Headers.Add("Pow-Nonce", nonce);
+
+                            response.Dispose();
+
+                            var retryResponse = await _httpClient.SendAsync(retry);
+
+                            return await HandleResponse<T>(retryResponse, retry, method, endpoint);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggerService.Error($"PoW error: {ex.Message}");
+                    }
+                }
+
+                // Unauthorized
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    Logger.Error($"[{method}] {endpoint} -> 401 Unauthorized");
+                    LoggerService.Error($"[{method}] {endpoint} -> 401 Unauthorized");
 
                     this.HandleUnauthorized();
 
@@ -197,13 +320,13 @@ namespace Clouva.Desktop.Services
 
                 string message = this.ExtractErrorMessage(text);
 
-                Logger.Error($"[{method}] {endpoint} -> {response.StatusCode}: {message}");
+                LoggerService.Error($"[{method}] {endpoint} -> {response.StatusCode}: {message}");
                 this.ShowError(message ?? $"Ошибка {response.StatusCode}");
 
                 return default;
             }
 
-            Logger.Info($"[{method}] {endpoint} -> OK ({response.StatusCode})");
+            LoggerService.Info($"[{method}] {endpoint} -> OK ({response.StatusCode})");
 
             try
             {
@@ -216,11 +339,33 @@ namespace Clouva.Desktop.Services
             }
             catch (Exception ex)
             {
-                Logger.Error($"Deserialize error: {ex.Message}");
+                LoggerService.Error($"Deserialize error: {ex.Message}");
                 this.ShowError("Ошибка при разборе ответа сервера.");
 
                 return default;
             }
+        }
+
+        private async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri);
+
+            foreach (var header in request.Headers) clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+
+            if (request.Content != null)
+            {
+                var ms = new MemoryStream();
+                await request.Content.CopyToAsync(ms);
+                ms.Position = 0;
+
+                var content = new StreamContent(ms);
+
+                foreach (var header in request.Content.Headers) content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+
+                clone.Content = content;
+            }
+
+            return clone;
         }
 
         private string ExtractErrorMessage(string responseBody)
@@ -229,7 +374,7 @@ namespace Clouva.Desktop.Services
             {
                 var doc = JsonDocument.Parse(responseBody);
 
-                if (doc.RootElement.TryGetProperty("message", out var msg))
+                if (doc.RootElement.TryGetProperty("error", out var msg))
                 {
                     return msg.GetString();
                 }
@@ -275,7 +420,7 @@ namespace Clouva.Desktop.Services
 
         private void ShowError(string message)
         {
-            //Notification.Show("Ошибка", message, NotificationType.Error);
+            MessageBox.Show(message, "Error message from server", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

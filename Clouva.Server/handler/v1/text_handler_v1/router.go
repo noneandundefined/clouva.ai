@@ -17,7 +17,5 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	textRouter.Use(middleware.IsAuthenticatedMiddleware(h.BaseHandler))
 
 	/* Access: ALL */
-	textRouter.Handle("/rewrite", middleware.PowDDos()(
-		httpx.ErrorHandler(h.TextRewriteHttpHandler_V1),
-	)).Methods(http.MethodPost)
+	textRouter.Handle("/rewrite", httpx.ErrorHandler(h.TextRewriteHttpHandler_V1)).Methods(http.MethodPost)
 }

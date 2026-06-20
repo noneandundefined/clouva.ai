@@ -21,7 +21,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	deviceRouter.Handle("/create-session", httpx.ErrorHandler(h.DeviceCreateAuthSessionHandler_V1)).Methods(http.MethodPost)
 
 	/* Access: ALL */
-	deviceRouter.Handle("/session/{session_id}", middleware.PowDDos()(
+	deviceProtectedRouter.Handle("/session/{session_id}", middleware.PowDDos()(
 		httpx.ErrorHandler(h.DeviceSessionGetBySessionIdHandler_V1),
 	)).Methods(http.MethodGet)
 

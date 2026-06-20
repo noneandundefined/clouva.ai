@@ -28,6 +28,7 @@
 	"error.malicious-request-parameter": "Некорректный контент в параметре",
 	"error.malicious-content-body": "Некорректный контент в теле",
 	"error.fields-not-filled": "Не все поля заполнены",
+	"error.audio-not-supported": "Отправляйте текст, а не аудиофайл",
 	"error.logged-out": "Вы вышли из аккаунта",
 	"password-reset-data-subject": "Восстановление пароля Clouva.ai",
 	"go-to-link-reset-password": "Пожалуйста, перейдите по ссылке для установки нового пароля",

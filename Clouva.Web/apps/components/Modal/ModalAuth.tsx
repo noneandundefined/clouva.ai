@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { GUInput } from '../ui/Input/GUInput';
 import { useTranslation } from 'react-i18next';
 import GUIButton from '../ui/Button/GUIButton';
-import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/constants';
 import InputPassword from '../ui/Input/InputPassword';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { basicAuthCheck, basicAuthSignIn } from '@/rest/authAPI';
+import { clearRedirectUrl, getRedirectUrl } from '@/utils/ReturnUrlUtils';
 import { buildSentConfirmEmailPath } from '@/utils/SignupSearchParamsUtils';
 import type { AuthSigninRequest } from '@/interface/auth/authSigninRequest.interface';
 import { ValidationEmailSchema, ValidationPasswordSchema } from '@/utils/ValidationSchema';
@@ -17,8 +18,9 @@ type ModalAuthProps = {
 
 const ModalAuth: React.FC<ModalAuthProps> = ({ onSuccess }) => {
 	const { t } = useTranslation();
-
 	const navigate = useNavigate();
+
+	const [params] = useSearchParams();
 
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -35,16 +37,24 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ onSuccess }) => {
 	});
 
 	const onSubmitSignin = async (data: AuthSigninRequest) => {
+		const returnUrl = params.get('returnUrl') ?? getRedirectUrl();
+
 		const result = await basicAuthSignIn(data);
 
 		onSuccess?.();
 
 		if (result.status === 'sent') {
-			navigate(`${ROUTES.AUTH_SENT_CONFIRM_EMAIL}?${buildSentConfirmEmailPath(data.email)}`);
+			navigate(`${ROUTES.AUTH_SENT_CONFIRM_EMAIL}?${buildSentConfirmEmailPath(data.email)}&returnUrl=${encodeURIComponent(returnUrl ?? '')}`);
 			return;
 		}
 
-		navigate(ROUTES.HOME);
+		if (returnUrl) {
+			clearRedirectUrl();
+			navigate(returnUrl, { replace: true });
+			return;
+		}
+
+		window.location.reload();
 	};
 
 	const onSubmitCheck = async (data: AuthSigninRequest) => {

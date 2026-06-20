@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { basicAuthConfirmEmail } from '@/rest/authAPI';
 import { CACHEKEYs } from '@/constants/CacheKeys.constants';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { clearRedirectUrl, getRedirectUrl } from '@/utils/ReturnUrlUtils';
 
 type errorTypeConfirm = 'invalid' | 'error';
 
@@ -32,7 +33,15 @@ const ConfirmEmailPage = () => {
 				if (response.status === 'success') {
 					localStorage.setItem(CACHEKEYs.L_SESSION, response.message);
 
-					navigate('/');
+					const returnUrl = searchParams.get('returnUrl') ?? getRedirectUrl();
+
+					if (returnUrl) {
+						clearRedirectUrl();
+						navigate(returnUrl, { replace: true });
+						return;
+					}
+
+					navigate('/', { replace: true });
 					return;
 				}
 

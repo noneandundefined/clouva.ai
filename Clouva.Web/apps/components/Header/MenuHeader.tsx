@@ -1,10 +1,11 @@
 import i18n from '@/utils/i18n';
+import Modal from '../Modal/Modal';
 import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/constants';
-import { basicAuthSignOut } from '@/rest/authAPI';
-import { useEffect, useRef, useState } from 'react';
-import { CACHEKEYs } from '@/constants/CacheKeys.constants';
+import ModalSignOut from '../Modal/ModalSignOut';
+import { useModalContext } from '@/context/useModalContext';
 import { type UserLoginStateResponse } from '@/rest/userAPI';
 
 interface MenuHeaderProps {
@@ -14,12 +15,13 @@ interface MenuHeaderProps {
 
 const MenuHeader: React.FC<MenuHeaderProps> = ({ close, user }) => {
 	const { t, i18n: i18nInstance } = useTranslation();
+	
+	const { open } = useModalContext();
 
 	const currentLang = i18nInstance.language?.startsWith('ru') ? 'ru' : 'en';
 	const languageLabel = currentLang === 'ru' ? t('label.language-ru') : t('label.language-en');
 
 	const ref = useRef<HTMLDivElement>(null);
-	const [signingOut, setSigningOut] = useState(false);
 
 	// const initials = user.first_name.slice(0, 2).toUpperCase();
 	// const accountType = user.plan_name || t('label.account-type-personal');
@@ -43,21 +45,13 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ close, user }) => {
 		localStorage.setItem('lang', nextLang);
 	};
 
-	const handleSignOut = async () => {
-		if (signingOut) return;
-		setSigningOut(true);
-
-		try {
-			await basicAuthSignOut();
-			localStorage.removeItem(CACHEKEYs.L_SESSION);
-
-			close();
-		} catch {
-			localStorage.removeItem(CACHEKEYs.L_SESSION);
-			close();
-		} finally {
-			setSigningOut(false);
-		}
+	const handleSignOut = () => {
+		close();
+		open(
+			<Modal title={t('message.sign-out-title')}>
+				<ModalSignOut />
+			</Modal>
+		);
 	};
 
 	const isPremium = user.plan_name.toLowerCase() != 'free';
@@ -111,7 +105,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ close, user }) => {
 				tabIndex={0}
 				onKeyDown={(e) => e.key === 'Enter' && handleSignOut()}
 			>
-				<p className="text-sm">{signingOut ? t('message.loading') : t('label.sign-out')}</p>
+				<p className="text-sm">{t('label.sign-out')}</p>
 			</div>
 		</div>
 	);

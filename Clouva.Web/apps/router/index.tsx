@@ -5,11 +5,10 @@ import { getAuthState } from '@/private-route';
 import { ROUTES } from '@/constants/constants';
 import { useTranslation } from 'react-i18next';
 import type { CustomRouteConfig } from './config';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const CustomRoute: React.FC<CustomRouteConfig> = ({ loginRequired = true, redirectIfLogged = false, component: Component, title }) => {
 	const { t } = useTranslation();
-	const location = useLocation();
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -36,9 +35,9 @@ const CustomRoute: React.FC<CustomRouteConfig> = ({ loginRequired = true, redire
 	if (loginRequired) {
 		if (isLoggedIn) {
 			return <Component />;
-		} else {
-			return <Navigate to={ROUTES.HOME} state={{ from: location }} replace />;
 		}
+
+		return <Navigate to={ROUTES.HOME} replace />;
 	} else {
 		return isLoggedIn && redirectIfLogged ? <Navigate to={ROUTES.HOME} replace /> : <Component />;
 	}

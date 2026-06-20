@@ -51,7 +51,7 @@ const config: CustomRouteConfig[] = [
 	/** AUTH */
 	{
 		path: ROUTES.AUTH_AUTHORIZE_DEVICE,
-		loginRequired: false,
+		loginRequired: true,
 		redirectIfLogged: false,
 		title: 'meta.AuthorizeDevice.title',
 		component: AuthorizeDevice,

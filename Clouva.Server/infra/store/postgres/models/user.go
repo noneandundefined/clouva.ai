@@ -15,16 +15,15 @@ type UserCore struct {
 }
 
 type UserSubscription struct {
-	ID          uint64     `json:"id" db:"id"`
-	CreatedAt   time.Time  `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at" db:"updated_at"`
-	UserUUID    string     `json:"user_uuid" db:"user_uuid"`
-	PlanName    string     `json:"plan_name" db:"plan_name"`
-	TokensLimit int        `json:"tokens_limit" db:"tokens_limit"`
-	ValidFrom   time.Time  `json:"valid_from" db:"valid_from"`
-	ValidTo     *time.Time `json:"valid_to,omitempty" db:"valid_to"`
-	IsActive    bool       `json:"is_active" db:"is_active"`
-
+	ID                      uint64     `json:"id" db:"id"`
+	CreatedAt               time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt               time.Time  `json:"updated_at" db:"updated_at"`
+	UserUUID                string     `json:"user_uuid" db:"user_uuid"`
+	PlanName                string     `json:"plan_name" db:"plan_name"`
+	TokensLimit             int        `json:"tokens_limit" db:"tokens_limit"`
+	ValidFrom               time.Time  `json:"valid_from" db:"valid_from"`
+	ValidTo                 *time.Time `json:"valid_to,omitempty" db:"valid_to"`
+	IsActive                bool       `json:"is_active" db:"is_active"`
 	AutoRenewEnabled        bool       `json:"auto_renew_enabled" db:"auto_renew_enabled"`
 	YookassaPaymentMethodID *string    `json:"yookassa_payment_method_id,omitempty" db:"yookassa_payment_method_id"`
 	PaymentMethodType       *string    `json:"payment_method_type,omitempty" db:"payment_method_type"`

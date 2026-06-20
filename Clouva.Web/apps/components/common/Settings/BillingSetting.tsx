@@ -27,6 +27,7 @@ const BillingSetting = () => {
 	const tokensUsed = respUserLoginState?.tokens_used ?? 0;
 	const tokensLimit = respUserLoginState?.tokens_limit ?? 0;
 	const usagePercent = tokensLimit > 0 ? Math.min(100, (tokensUsed / tokensLimit) * 100) : 0;
+	const completedPayments = respPaymentHistory?.filter((item) => item.status !== 'pending') ?? [];
 
 	const isPremium = respUserLoginState?.plan_name.toLowerCase() != 'free';
 
@@ -64,7 +65,10 @@ const BillingSetting = () => {
 						</div>
 
 						<div className="h-2 overflow-hidden rounded-full bg-gray-200">
-							<div className="h-full bg-orange-500 transition-all duration-300" style={{ width: `${usagePercent}%` }} />
+							<div
+								className="h-full transition-all duration-300"
+								style={{ width: `${usagePercent}%`, background: 'linear-gradient(135deg, #fc3365 10%, #fc3387 15%, #b25cff 65%, #2c46a8 110%)' }}
+							/>
 						</div>
 
 						<div className="mt-3 flex items-center justify-between">
@@ -104,10 +108,10 @@ const BillingSetting = () => {
 
 					{respPaymentHistoryLoading && !respPaymentHistory ? (
 						<p className="py-4 text-sm text-gray-500">{t('message.loading')}</p>
-					) : !respPaymentHistory?.length ? (
+					) : !completedPayments.length ? (
 						<p className="py-4 text-sm text-gray-500">—</p>
 					) : (
-						respPaymentHistory.map((item) => (
+						completedPayments.map((item) => (
 							<div key={item.id} className="flex border-b border-[#e5e7eb] py-3 text-sm last:border-b-0">
 								<div className="flex-1">{item.plan_name}</div>
 								<div className="w-[160px]">{formatPrice(item.amount, item.currency)}</div>

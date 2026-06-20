@@ -64,7 +64,7 @@ axiosClient.interceptors.response.use(
 
 		// internet
 		if (error.message === 'Network Error' || error.code === 'ERR_NETWORK' || error.message.includes('Network request failed')) {
-            notify.error(i18next.t('message.internet-error'))
+			notify.error(i18next.t('message.internet-error'));
 			return Promise.reject(error);
 		}
 

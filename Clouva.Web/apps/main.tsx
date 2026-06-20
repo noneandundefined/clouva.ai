@@ -46,8 +46,8 @@ const Root = () => {
 
 	return (
 		<AckAiModelsContext.Provider value={data?.status ?? 2}>
-            <NotificationProvider />
-            
+			<NotificationProvider />
+
 			<App />
 		</AckAiModelsContext.Provider>
 	);

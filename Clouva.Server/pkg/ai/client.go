@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync/atomic"
 
 	"clouva.ai.server/config"
@@ -56,10 +57,12 @@ func (client *OllamaClient) Ask(system, prompt string) (string, error) {
 }
 
 func (client *OllamaClient) Generate(ctx context.Context, system, prompt string) (string, error) {
-	body := GenerateRequest{
-		Model:  client.Model,
-		System: system,
-		Prompt: prompt,
+	body := ChatRequest{
+		Model: client.Model,
+		Messages: []ChatMessage{
+			{Role: "system", Content: system},
+			{Role: "user", Content: prompt},
+		},
 		Stream: false,
 		Options: map[string]any{
 			"temperature": 0.05,
@@ -73,7 +76,7 @@ func (client *OllamaClient) Generate(ctx context.Context, system, prompt string)
 		return "", err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, client.Host+"/api/generate", bytes.NewBuffer(data))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, client.Host+"/api/chat", bytes.NewBuffer(data))
 	if err != nil {
 		return "", err
 	}
@@ -85,14 +88,15 @@ func (client *OllamaClient) Generate(ctx context.Context, system, prompt string)
 	}
 	defer resp.Body.Close()
 
-	var result GenerateResponse
+	var result ChatResponse
 	if err := config.JSON.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
 
-	if result.Response == "" {
+	response := strings.TrimSpace(result.Message.Content)
+	if response == "" {
 		return "", fmt.Errorf("empty response from AI")
 	}
 
-	return result.Response, nil
+	return response, nil
 }

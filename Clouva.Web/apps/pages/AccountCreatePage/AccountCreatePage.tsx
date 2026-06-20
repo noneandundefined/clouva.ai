@@ -75,19 +75,9 @@ const AccountCreatePage = () => {
 					<GUInput type="email" placeholder={t('label.email')} {...register('email', ValidationEmailSchema<AuthSignupRequest, 'email'>(t))} error={errors.email?.message} />
 
 					<div className="flex gap-4">
-						<GUInput
-							type="text"
-							placeholder={t('label.first-name')}
-							{...register('first_name')}
-							error={errors.first_name?.message}
-						/>
+						<GUInput type="text" placeholder={t('label.first-name')} {...register('first_name')} error={errors.first_name?.message} />
 
-						<GUInput
-							type="text"
-							placeholder={t('label.last-name')}
-							{...register('last_name')}
-							error={errors.last_name?.message}
-						/>
+						<GUInput type="text" placeholder={t('label.last-name')} {...register('last_name')} error={errors.last_name?.message} />
 					</div>
 
 					<InputPassword placeholder={t('label.password')} {...register('password', ValidationPasswordSchema<AuthSignupRequest, 'password'>(t))} error={errors.password?.message} />
