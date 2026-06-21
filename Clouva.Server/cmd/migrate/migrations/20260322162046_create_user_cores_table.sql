@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS user_cores (
     email_confirmed BOOLEAN DEFAULT FALSE,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    password VARCHAR(17) NOT NULL CHECK (char_length(password) > 5)
+    password VARCHAR(255) NOT NULL CHECK (char_length(password) > 5)
 );
 
 -- +Triggers
