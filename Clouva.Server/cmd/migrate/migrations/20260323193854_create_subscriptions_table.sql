@@ -41,7 +41,7 @@ INSERT INTO subscriptions (plan_name, amount, currency, duration_days, tokens_us
         ]
     }');
 INSERT INTO subscriptions (plan_name, amount, currency, duration_days, tokens_used, can_change_email, can_delete_account, description, features) VALUES (
-    'Premium', 899, 'RUB', 30, 550000, TRUE, TRUE,
+    'Premium', 67, 'RUB', 30, 550000, TRUE, TRUE,
     '{
         "en": "Higher limits, faster AI, and advanced account controls.",
         "ru": "Больше лимитов, более быстрый AI и расширенные настройки аккаунта."
